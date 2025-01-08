@@ -72,6 +72,10 @@ For detailed technical specifications and deeper understanding:
 3. **Contrast**: Maintain high contrast between dark and light elements
 4. **Quiet Zone**: Leave white space around the QR code for better scanning
 
+## Site
+
+https://icjia-qr.netlify.app/
+
 ## Installation
 
 ### Local Installation
