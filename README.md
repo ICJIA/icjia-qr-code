@@ -2,6 +2,10 @@
 
 A simple, responsive web application that generates QR codes from URLs. Built with vanilla JavaScript and featuring both light and dark themes.
 
+## Site
+
+https://icjia-qr.netlify.app/
+
 ## Features
 
 - Generate QR codes from any valid URL
@@ -72,9 +76,7 @@ For detailed technical specifications and deeper understanding:
 3. **Contrast**: Maintain high contrast between dark and light elements
 4. **Quiet Zone**: Leave white space around the QR code for better scanning
 
-## Site
 
-https://icjia-qr.netlify.app/
 
 ## Installation
 
@@ -112,14 +114,6 @@ cd icjia-qr-code
    ```
    https://your-domain.com/path-to-app/index.html
    ```
-
-## Browser Support
-
-The application requires modern browser features including:
-
-- ES6+ JavaScript
-- Clipboard API for image copying
-- LocalStorage for theme persistence
 
 ## Licensing
 
