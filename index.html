@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+      :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --input-bg: #ffffff;
+        --button-hover: #0056b3;
+      }
+
+      [data-theme="dark"] {
+        --bg-color: #1a1a1a;
+        --text-color: #ffffff;
+        --input-bg: #333;
+        --button-hover: #004494;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      input[type="url"] {
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+        margin: 10px 0;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: var(--button-hover);
+      }
+
+      .container {
+        margin-top: 80px;
+        padding: 0 15px;
+      }
+
+      .qr-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+        position: relative;
+        gap: 15px;
+      }
+
+      #qrcode {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .url-display {
+        font-size: 14px; /* Increased from 12px */
+        color: #555;
+        word-break: break-all;
+        max-width: 256px;
+        text-align: center;
+        margin-bottom: 15px;
+        font-family: monospace;
+        line-height: 1.4;
+        text-decoration: none;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+
+      .url-display:hover {
+        color: var(--text-color);
+        text-decoration: underline;
+      }
+
+      .button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .copy-btn,
+      .reset-btn {
+        flex: 1;
+        min-width: 150px;
+        max-width: 200px;
+        padding: 10px 20px;
+        margin-top: 10px;
+        font-size: 1em;
+      }
+
+      .copy-btn {
+        background-color: #28a745;
+      }
+
+      .reset-btn {
+        background-color: #dc3545;
+      }
+
+      .hidden {
+        display: none !important; /* Add !important to ensure hiding works */
+      }
+
+      .theme-switch {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .toast-container {
+        position: fixed;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: 90%;
+        max-width: 400px;
+        pointer-events: none;
+      }
+
+      .toast {
+        padding: 12px 24px;
+        border-radius: 4px;
+        color: white;
+        font-size: 14px;
+        margin-bottom: 8px;
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        visibility: hidden;
+      }
+
+      .toast.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .toast.success {
+        background-color: #28a745;
+      }
+
+      .toast.info {
+        background-color: #17a2b8;
+      }
+
+      .toast.error {
+        background-color: #dc3545;
+      }
+
+      [data-theme="dark"] .toast {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .theme-icon {
+        width: 20px;
+        height: 20px;
+        fill: var(--text-color);
+        transition: fill 0.3s ease;
+      }
+
+      .download-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 256px;
+        margin: 0 auto;
+      }
+
+      .format-select {
+        padding: 8px;
+        border-radius: 4px;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        border: 1px solid #ccc;
+        min-width: 100px;
+      }
+
+      .download-btn {
+        background-color: #6c757d;
+      }
+
+      .download-btn:hover {
+        background-color: #5a6268;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 1.5em;
+          margin-bottom: 15px;
+        }
+
+        .theme-switch {
+          top: 10px;
+          right: 10px;
+        }
+
+        .copy-btn,
+        .reset-btn {
+          min-width: 120px;
+          font-size: 0.9em;
+        }
+
+        #qrcode {
+          max-width: 100%;
+        }
+
+        #qrcode canvas {
+          max-width: 100%;
+          height: auto !important;
+        }
+
+        .theme-icon {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .button-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .copy-btn,
+        .reset-btn {
+          max-width: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="theme-switch">
+      <svg class="theme-icon" viewBox="0 0 24 24">
+        <path
+          d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"
+        />
+      </svg>
+      <label class="switch">
+        <input type="checkbox" id="themeSwitch" />
+        <span class="slider"></span>
+      </label>
+      <svg class="theme-icon" viewBox="0 0 24 24">
+        <path
+          d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"
+        />
+      </svg>
+    </div>
+
+    <div class="container">
+      <h1>QR Code Generator</h1>
+      <div class="input-group">
+        <input type="url" id="url" placeholder="Enter URL here" required onkeypress="handleEnterKey(event)"/>
+        <button onclick="generateQR()">Generate QR Code</button>
+      </div>
+      <div class="qr-container">
+        <div id="qrcode"></div>
+        <a
+          id="urlDisplay"
+          class="url-display"
+          target="_blank"
+          rel="noopener noreferrer"
+        ></a>
+        <div class="download-controls hidden" id="downloadControls">  <!-- Add hidden class here -->
+          <select class="format-select" id="formatSelect">
+            <option value="jpg">JPG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WEBP</option>
+            <option value="svg">SVG</option>
+          </select>
+          <button class="download-btn" onclick="downloadQR()">Download</button>
+        </div>
+        <div class="button-group">
+          <div class="action-buttons">
+            <button
+              class="copy-btn hidden"
+              id="copyBtn"
+              onclick="copyQRToClipboard()"
+            >
+              Copy to Clipboard
+            </button>
+            <button class="reset-btn hidden" id="resetBtn" onclick="resetAll()">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /**
+       * Generates a QR code from a URL input value
+       * @description This function creates a QR code from the URL entered by the user.
+       * It performs input validation, clears any existing QR code, and generates
+       * a new one with specified parameters. It also manages the visibility of
+       * associated UI elements.
+       *
+       * @returns {void}
+       * @throws {Error} If QRCode library fails to generate code
+       */
+      function generateQR() {
+        // Get the URL from input field
+        const url = document.getElementById("url").value;
+
+        // Validate URL input
+        if (!url) {
+          showToast("Please enter a URL", "error");
+          return;
+        }
+
+        // Clear previous QR code and hide action buttons
+        document.getElementById("qrcode").innerHTML = "";
+        document.getElementById("copyBtn").classList.add("hidden");
+        document.getElementById("resetBtn").classList.add("hidden");
+        document.getElementById("downloadControls").classList.add("hidden");
+
+        // Update URL display with link
+        const urlDisplay = document.getElementById("urlDisplay");
+        urlDisplay.textContent = url;
+        urlDisplay.href = url.startsWith("http") ? url : `https://${url}`;
+
+        // Configure and generate new QR code
+        new QRCode(document.getElementById("qrcode"), {
+          text: url, // The URL to encode
+          width: 256, // QR code width in pixels
+          height: 256, // QR code height in pixels
+          colorDark: "#000000", // Color of QR code blocks
+          colorLight: "#ffffff", // Background color
+          correctLevel: QRCode.CorrectLevel.H, // Highest error correction level
+        });
+
+        // Show success toast
+        showToast("QR Code successfully generated", "success");
+
+        // Show action buttons after brief delay to ensure QR code is rendered
+        setTimeout(() => {
+          document.getElementById("copyBtn").classList.remove("hidden");
+          document.getElementById("resetBtn").classList.remove("hidden");
+          document
+            .getElementById("downloadControls")
+            .classList.remove("hidden");
+        }, 100);
+      }
+
+      /**
+       * Copies the generated QR code to the system clipboard as an image
+       * @description Converts the QR code canvas to a blob and uses the Clipboard API
+       * to copy it as an image. Shows success or error toast notifications.
+       *
+       * @async
+       * @returns {Promise<void>}
+       * @throws {Error} If clipboard operations fail or browser doesn't support the feature
+       */
+      async function copyQRToClipboard() {
+        try {
+          // Get the canvas element containing the QR code
+          const canvas = document.querySelector("#qrcode canvas");
+
+          // Convert canvas to blob format
+          const blob = await new Promise((resolve) => canvas.toBlob(resolve));
+
+          // Use Clipboard API to write the image
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "image/png": blob,
+            }),
+          ]);
+
+          showToast("QR Code copied to clipboard!", "success");
+        } catch (err) {
+          console.error("Clipboard error:", err);
+          showToast("Failed to copy QR code", "error");
+        }
+      }
+
+      /**
+       * Resets the QR code generator to its initial state
+       * @description Clears all input fields, removes the generated QR code,
+       * hides action buttons, and shows a confirmation toast.
+       *
+       * @returns {void}
+       */
+      function resetAll() {
+        // Clear all form fields and generated content
+        document.getElementById("url").value = "";
+        document.getElementById("qrcode").innerHTML = "";
+        document.getElementById("urlDisplay").textContent = "";
+
+        // Hide action buttons
+        document.getElementById("copyBtn").classList.add("hidden");
+        document.getElementById("resetBtn").classList.add("hidden");
+        document.getElementById("downloadControls").classList.add("hidden");
+
+        // Notify user of reset
+        showToast("QR Code generator has been reset", "info");
+      }
+
+      /**
+       * Toggles between light and dark theme
+       * @description Switches the application theme and persists the selection
+       * in localStorage for future visits.
+       *
+       * @param {Event} e - The change event from the theme toggle switch
+       * @returns {void}
+       */
+      function toggleTheme(e) {
+        const isDarkMode = e.target.checked;
+        const theme = isDarkMode ? "dark" : "light";
+
+        // Update DOM and persist selection
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+      }
+
+      /**
+       * Displays a toast notification
+       * @description Creates and shows a temporary notification message
+       * that automatically fades out after a set duration.
+       *
+       * @param {string} message - The message to display in the toast
+       * @param {('success'|'error'|'info')} [type='success'] - The type of toast
+       * @returns {void}
+       */
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toastContainer");
+
+        // Remove any existing toasts
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+
+        container.appendChild(toast);
+
+        // Force reflow
+        void toast.offsetHeight;
+
+        // Show toast
+        requestAnimationFrame(() => {
+          toast.classList.add("show");
+        });
+
+        // Remove toast after 2 seconds (increased from 1 second)
+        setTimeout(() => {
+          toast.classList.remove("show");
+
+          // Remove from DOM after animation
+          setTimeout(() => {
+            if (container.contains(toast)) {
+              container.removeChild(toast);
+            }
+          }, 300);
+        }, 2000); // Changed to 2000ms (2 seconds)
+      }
+
+      /**
+       * Downloads the QR code in the selected format
+       * @description Converts the QR code to the selected format and triggers download
+       * @returns {Promise<void>}
+       */
+      async function downloadQR() {
+        const format = document.getElementById("formatSelect").value;
+        const url = document.getElementById("url").value;
+
+        // Create filename by removing protocol and special characters
+        const cleanUrl = url
+          .replace(/^(https?:\/\/)/, "") // Remove protocol
+          .replace(/\/$/, "") // Remove trailing slash
+          .replace(/[^\w.-]/g, "-") // Replace special chars with hyphen
+          .replace(/--+/g, "-") // Replace multiple hyphens with single
+          .substring(0, 50); // Limit length for filename
+
+        const filename = `qr-code-${cleanUrl}.${format}`;
+
+        const canvas = document.querySelector("#qrcode canvas");
+
+        try {
+          if (format === "svg") {
+            // Generate SVG from QR code data
+            const svgData = await generateSVG();
+            const blob = new Blob([svgData], { type: "image/svg+xml" });
+            saveAs(blob, filename);
+          } else {
+            // Handle other formats using canvas conversion
+            const mimeType = `image/${format}`;
+            const quality = format === "jpg" ? 0.9 : undefined;
+
+            const blob = await new Promise((resolve) =>
+              canvas.toBlob(resolve, mimeType, quality)
+            );
+            saveAs(blob, filename);
+          }
+          showToast(`QR Code downloaded as ${format.toUpperCase()}`, "success");
+        } catch (err) {
+          console.error("Download error:", err);
+          showToast("Failed to download QR code", "error");
+        }
+      }
+
+      /**
+       * Generates SVG representation of the QR code
+       * @returns {Promise<string>} SVG markup
+       */
+      async function generateSVG() {
+        const canvas = document.querySelector("#qrcode canvas");
+        const size = canvas.width;
+        const ctx = canvas.getContext("2d");
+        const imageData = ctx.getImageData(0, 0, size, size);
+        const data = imageData.data;
+
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+        for (let y = 0; y < size; y++) {
+          for (let x = 0; x < size; x++) {
+            const idx = (y * size + x) * 4;
+            const alpha = data[idx + 3];
+
+            if (alpha > 0) {
+              svg += `<rect x="${x}" y="${y}" width="1" height="1" fill="black"/>`;
+            }
+          }
+        }
+
+        svg += "</svg>";
+        return svg;
+      }
+
+      /**
+       * Handles enter key press in URL input field
+       * @description Triggers QR code generation when enter key is pressed
+       * @param {KeyboardEvent} event - The keyboard event
+       */
+      function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            generateQR();
+        }
+      }
+
+      // Initialize theme switch functionality
+      const themeSwitch = document.getElementById("themeSwitch");
+      themeSwitch.addEventListener("change", toggleTheme);
+
+      // Check and apply saved theme preference
+      const currentTheme = localStorage.getItem("theme");
+      if (currentTheme) {
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        themeSwitch.checked = currentTheme === "dark";
+      }
+    </script>
+  </body>
+</html>
