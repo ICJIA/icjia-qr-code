@@ -4,7 +4,7 @@ A simple, responsive web application that generates QR codes from URLs. Built wi
 
 ## Site
 
-https://icjia-qr.netlify.app/
+https://qr.icjia.cloud
 
 ## Features
 
@@ -23,17 +23,20 @@ A QR (Quick Response) code is a two-dimensional barcode that can store data such
 QR codes are a kind of of two-dimensional barcode. QR codes use a specific encoding process to convert data into visual patterns:
 
 1. **Data Analysis**
+
    - Input data is analyzed and converted to binary
    - Data is classified into one of four modes: numeric, alphanumeric, byte/binary, or kanji
    - Most efficient encoding mode is selected automatically
 
 2. **Error Correction**
+
    - Reed-Solomon error correction codes are added
    - Four levels available: L (7%), M (15%), Q (25%), H (30%)
    - Higher correction levels make QR code more dense but more reliable
    - Allows QR codes to be readable even when partially damaged or obscured
 
 3. **Structure Generation**
+
    - Data is arranged in a specific pattern with function patterns
    - Includes position detection patterns (three large squares in corners)
    - Alignment and timing patterns help scanners read code at any angle
@@ -46,6 +49,7 @@ QR codes are a kind of of two-dimensional barcode. QR codes use a specific encod
    - Uses masking patterns to ensure optimal black/white balance
 
 For detailed technical specifications and deeper understanding:
+
 - [ISO/IEC 18004:2015 Standard](https://www.iso.org/standard/62021.html) - Official QR code specification
 - [Thonky QR Code Tutorial](https://www.thonky.com/qr-code-tutorial/) - Comprehensive technical explanation
 - [QR Code Generator Library](https://github.com/kazuhikoarase/qrcode-generator) - Reference implementation
@@ -54,17 +58,20 @@ For detailed technical specifications and deeper understanding:
 ### Scanning QR Codes
 
 #### iPhone Users
+
 - Open the Camera app
 - Point your camera at the QR code
 - Tap the notification banner that appears to open the link
 - No additional app required for iOS 11 and later
 
 #### Android Users
+
 - Recent Android phones: Use the built-in Camera app
 - Google Lens: Available through Google Assistant or as standalone app
 - Alternative: Install a QR code scanner from the Play Store
 
 #### Other Devices
+
 - Most tablet cameras support QR code scanning
 - Desktop/laptop users can use webcams with browser-based QR readers
 - Many banking and payment apps include built-in QR scanners
@@ -75,8 +82,6 @@ For detailed technical specifications and deeper understanding:
 2. **Size**: Ensure the QR code is large enough to scan (minimum 2x2 cm / 0.8x0.8 inches)
 3. **Contrast**: Maintain high contrast between dark and light elements
 4. **Quiet Zone**: Leave white space around the QR code for better scanning
-
-
 
 ## Installation
 
@@ -90,6 +95,7 @@ cd icjia-qr-code
 ```
 
 2. Open `index.html` in your web browser:
+
    - Double click the file
    - Or serve it using a local server:
 
