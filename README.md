@@ -262,25 +262,6 @@ The test output provides:
 - Visual indicators (✅/❌) for quick status assessment
 - Comprehensive test summaries by category
 
-### Why Testing Matters
-
-QR codes are often used in:
-
-- Printed marketing materials
-- Business cards
-- Physical signage
-- Product packaging
-- Educational materials
-
-Invalid URLs in these contexts can lead to:
-
-- Poor user experience
-- Lost business opportunities
-- Wasted print materials
-- Damaged brand reputation
-- Unnecessary reprinting costs
-
-Our comprehensive test suite ensures that generated QR codes will reliably direct users to their intended destinations, protecting both the creator and end-user from common URL-related issues.
 
 ## License
 
