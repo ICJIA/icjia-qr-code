@@ -24,6 +24,7 @@
 
     <div class="container">
       <h1>QR Code Generator</h1>
+
       <div class="input-group">
         <input
           type="url"
@@ -36,6 +37,13 @@
           Generate QR Code
         </button>
       </div>
+
+      <!-- URL Encoding Confirmation Section - Only shown when URL needs encoding -->
+      <div
+        class="encoding-confirm hidden"
+        role="dialog"
+        aria-labelledby="encoding-title"
+      ></div>
 
       <div class="qr-container hidden">
         <div id="qrcode" role="img" aria-label="Generated QR code"></div>
@@ -80,19 +88,49 @@
         </div>
       </div>
 
-      <!-- URL Encoding Information Section -->
+      <!-- Best Practices Section -->
       <div
-        class="encoding-info hidden"
+        class="best-practices hidden"
         role="region"
-        aria-label="URL encoding information"
-      ></div>
-
-      <!-- URL Encoding Confirmation Section -->
-      <div
-        class="encoding-confirm hidden"
-        role="dialog"
-        aria-labelledby="encoding-title"
-      ></div>
+        aria-label="QR code best practices"
+      >
+        <h2>QR Code Best Practices</h2>
+        <div class="practices-list">
+          <div class="practice-item">
+            <span class="practice-icon">🔍</span>
+            <div class="practice-content">
+              <h3>Test Before Sharing</h3>
+              <p>
+                Always test your QR code with multiple devices before sharing
+              </p>
+            </div>
+          </div>
+          <div class="practice-item">
+            <span class="practice-icon">📏</span>
+            <div class="practice-content">
+              <h3>Minimum Size</h3>
+              <p>
+                Ensure the QR code is at least 2x2 cm (0.8x0.8 inches) when
+                printed
+              </p>
+            </div>
+          </div>
+          <div class="practice-item">
+            <span class="practice-icon">🎨</span>
+            <div class="practice-content">
+              <h3>High Contrast</h3>
+              <p>Maintain strong contrast between dark and light elements</p>
+            </div>
+          </div>
+          <div class="practice-item">
+            <span class="practice-icon">⬜</span>
+            <div class="practice-content">
+              <h3>Quiet Zone</h3>
+              <p>Leave white space around the QR code for better scanning</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="toast-container" role="status" aria-live="polite"></div>
     </div>

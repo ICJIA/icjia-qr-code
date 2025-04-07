@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const downloadBtn = document.querySelector("#download-btn");
   const resetBtn = document.querySelector("#reset-btn");
   const formatSelect = document.querySelector("#format-select");
+  const loadingIndicator = document.querySelector(".loading-indicator");
 
   let qr = null;
 
@@ -64,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function sanitizeAndValidateURL(input) {
     console.log("🔍 Validating URL:", input);
     try {
-      // Trim whitespace
       const sanitizedUrl = input.trim();
 
       // Require URL to start with http:// or https://
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
       }
 
-      // Parse and validate URL structure
+      // Parse URL to validate structure
       const urlObject = new URL(sanitizedUrl);
 
       // Ensure only http or https protocols are allowed
@@ -104,58 +104,73 @@ document.addEventListener("DOMContentLoaded", function () {
         };
       }
 
-      // Properly encode the URL components while preserving the URL structure
+      // Create encoded version
       const encodedUrl = new URL(sanitizedUrl);
-      const originalPathname = encodedUrl.pathname;
+      let needsEncoding = false;
 
-      // Encode the pathname (handles spaces and special characters in the path)
-      encodedUrl.pathname = encodedUrl.pathname
-        .split("/")
-        .map((segment) =>
-          segment ? encodeURIComponent(decodeURIComponent(segment)) : ""
+      // Check pathname for spaces and special characters
+      const pathParts = urlObject.pathname.split("/");
+      for (const part of pathParts) {
+        if (part && part !== encodeURIComponent(part)) {
+          needsEncoding = true;
+          break;
+        }
+      }
+
+      // Check search params
+      if (
+        urlObject.search &&
+        urlObject.search.slice(1) !==
+          encodeURIComponent(urlObject.search.slice(1))
+      ) {
+        needsEncoding = true;
+      }
+
+      // Check hash
+      if (
+        urlObject.hash &&
+        urlObject.hash.slice(1) !== encodeURIComponent(urlObject.hash.slice(1))
+      ) {
+        needsEncoding = true;
+      }
+
+      // If no encoding needed, return original
+      if (!needsEncoding) {
+        return {
+          isValid: true,
+          url: sanitizedUrl,
+          originalUrl: sanitizedUrl,
+        };
+      }
+
+      // Encode URL parts
+      encodedUrl.pathname = pathParts
+        .map((part) =>
+          part ? encodeURIComponent(decodeURIComponent(part)) : ""
         )
         .join("/");
 
-      // Log if pathname was modified
-      if (originalPathname !== encodedUrl.pathname) {
-        console.log("🔄 URL pathname encoded:", {
-          original: originalPathname,
-          encoded: encodedUrl.pathname,
-        });
-      }
-
-      // Preserve any query parameters and hash, but ensure they're properly encoded
       if (urlObject.search) {
-        encodedUrl.search = urlObject.search;
-        console.log("📝 URL includes query parameters:", urlObject.search);
-      }
-      if (urlObject.hash) {
-        encodedUrl.hash = urlObject.hash;
-        console.log("📝 URL includes hash:", urlObject.hash);
+        encodedUrl.search =
+          "?" +
+          encodeURIComponent(decodeURIComponent(urlObject.search.slice(1)));
       }
 
-      const result = {
+      if (urlObject.hash) {
+        encodedUrl.hash =
+          "#" + encodeURIComponent(decodeURIComponent(urlObject.hash.slice(1)));
+      }
+
+      return {
         isValid: true,
         url: encodedUrl.toString(),
         originalUrl: sanitizedUrl,
       };
-
-      if (result.url !== result.originalUrl) {
-        console.log("🔄 URL encoding changes detected:", {
-          original: result.originalUrl,
-          encoded: result.url,
-        });
-      } else {
-        console.log("✅ URL validation passed with no encoding needed");
-      }
-
-      return result;
     } catch (error) {
       console.error("❌ URL validation error:", error);
       return {
         isValid: false,
-        error:
-          "Invalid URL format. URL must be complete with protocol (e.g., https://example.com)",
+        error: "Invalid URL format. Please check the URL",
       };
     }
   }
@@ -170,16 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Reset URL display
     urlDisplay.textContent = "";
     urlDisplay.href = "#";
-
-    // Hide encoding information
-    const encodingInfoDiv = document.querySelector(".encoding-info");
-    encodingInfoDiv.classList.add("hidden");
-    encodingInfoDiv.innerHTML = "";
-
-    // Hide encoding confirmation
-    const encodingConfirmDiv = document.querySelector(".encoding-confirm");
-    encodingConfirmDiv.classList.add("hidden");
-    encodingConfirmDiv.innerHTML = "";
 
     // Reset any error states or messages
     urlInput.classList.remove("error");
@@ -198,6 +203,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Clear any existing toasts
     const toastContainer = document.querySelector(".toast-container");
     toastContainer.innerHTML = "";
+
+    // Only hide the encoding confirmation if it exists
+    const encodingConfirmDiv = document.querySelector(".encoding-confirm");
+    if (encodingConfirmDiv) {
+      encodingConfirmDiv.classList.add("hidden");
+      encodingConfirmDiv.innerHTML = "";
+    }
   });
 
   // Generate QR Code
@@ -217,168 +229,15 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Clear previous QR code and related content
-    qrcodeDiv.innerHTML = "";
-    qrcodeContainer.classList.add("hidden");
-
-    // Check if URL needs encoding
+    // Only show encoding warning if actual encoding changes were made
     if (validationResult.url !== validationResult.originalUrl) {
-      // Analyze what specific changes were made
-      const changes = [];
-
-      // Check for spaces
-      if (validationResult.originalUrl.includes(" ")) {
-        changes.push('Spaces were found and converted to "%20"');
-      }
-
-      // Check for non-ASCII characters (like é, ñ, etc.)
-      const nonAsciiMatches =
-        validationResult.originalUrl.match(/[^\x00-\x7F]/g);
-      if (nonAsciiMatches) {
-        const uniqueChars = [...new Set(nonAsciiMatches)];
-        uniqueChars.forEach((char) => {
-          const encoded = encodeURIComponent(char);
-          changes.push(
-            `Special character "${char}" was converted to "${encoded}"`
-          );
-        });
-      }
-
-      // Check for specific symbols that commonly need encoding
-      const symbolChecks = {
-        "+": "%2B",
-        "&": "%26",
-        "?": "%3F",
-        "#": "%23",
-        "=": "%3D",
-        "%": "%25",
-      };
-
-      Object.entries(symbolChecks).forEach(([symbol, encoded]) => {
-        if (validationResult.originalUrl.includes(symbol)) {
-          changes.push(`Symbol "${symbol}" was converted to "${encoded}"`);
-        }
-      });
-
-      // If we have actual encoding changes, show confirmation dialog
-      if (changes.length > 0) {
-        const encodingConfirmDiv = document.querySelector(".encoding-confirm");
-        encodingConfirmDiv.innerHTML = `
-          <div class="encoding-details">
-            <h3>Your URL Needs to be Modified</h3>
-            <div class="encoding-warning">
-              ⚠️ Important: Your URL contains characters that need to be modified to work properly in QR codes.
-              Please review the changes below and confirm if you want to proceed.
-            </div>
-            <div class="changes-list">
-              <p><strong>Required changes to your URL:</strong></p>
-              <ul>
-                ${changes.map((change) => `<li>${change}</li>`).join("")}
-              </ul>
-            </div>
-            <div class="url-comparison">
-              <div class="url-item">
-                <strong>Your Original URL:</strong>
-                <span class="url-text">${validationResult.originalUrl}</span>
-              </div>
-              <div class="url-item">
-                <strong>Modified URL:</strong>
-                <a href="${
-                  validationResult.url
-                }" target="_blank" class="url-text">${validationResult.url}</a>
-                <small>👆 Click to verify this modified URL works as expected</small>
-              </div>
-            </div>
-            <div class="encoding-actions">
-              <button id="approve-encoding" class="btn btn-primary">Generate QR Code with Modified URL</button>
-              <button id="reject-encoding" class="btn btn-secondary">Cancel and Reset</button>
-            </div>
-          </div>
-        `;
-        encodingConfirmDiv.classList.remove("hidden");
-
-        // Handle approval/rejection
-        const approveBtn = document.getElementById("approve-encoding");
-        const rejectBtn = document.getElementById("reject-encoding");
-
-        // Return a promise that resolves when user makes a choice
-        return new Promise((resolve, reject) => {
-          approveBtn.addEventListener("click", async () => {
-            encodingConfirmDiv.classList.add("hidden");
-            encodingConfirmDiv.innerHTML = "";
-            await generateQRCode(validationResult);
-            resolve();
-          });
-
-          rejectBtn.addEventListener("click", () => {
-            // Reset everything
-            urlInput.value = "";
-            qrcodeDiv.innerHTML = "";
-            urlDisplay.textContent = "";
-            urlDisplay.href = "#";
-            qrcodeContainer.classList.add("hidden");
-            encodingConfirmDiv.classList.add("hidden");
-            encodingConfirmDiv.innerHTML = "";
-            showToast("QR code generation cancelled", "info");
-            resolve();
-          });
-        });
-      }
+      showEncodingWarning(validationResult);
+      return;
     }
 
-    // If no encoding needed or changes approved, generate QR code
+    // Generate QR code
     await generateQRCode(validationResult);
   });
-
-  // Separate function for QR code generation
-  async function generateQRCode(validationResult) {
-    console.log(
-      "🎨 Starting QR code generation for URL:",
-      validationResult.url
-    );
-    try {
-      // Show loading state
-      generateBtn.classList.add("loading");
-      generateBtn.disabled = true;
-
-      // Display the encoded URL (not the original)
-      urlDisplay.textContent = validationResult.url;
-      urlDisplay.href = validationResult.url;
-
-      // Generate new QR code with encoded URL
-      qr = new QRCode(qrcodeDiv, {
-        text: validationResult.url,
-        width: 256,
-        height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
-
-      console.log("✅ QR code generated successfully");
-      // Show elements
-      qrcodeContainer.classList.remove("hidden");
-      showToast("QR Code generated successfully!", "success");
-
-      // Keep generate button disabled after successful generation
-      generateBtn.disabled = true;
-      generateBtn.style.opacity = "0.6";
-      generateBtn.title = "Please reset or refresh to generate a new QR code";
-    } catch (e) {
-      console.error("❌ QR Code generation error:", {
-        error: e,
-        message: e.message,
-        stack: e.stack,
-      });
-      showToast("Failed to generate QR Code", "error");
-      // Re-enable button on error
-      generateBtn.disabled = false;
-      generateBtn.style.opacity = "1";
-    } finally {
-      // Only remove loading state
-      generateBtn.classList.remove("loading");
-    }
-  }
 
   // Copy QR Code to clipboard
   copyBtn.addEventListener("click", async function () {
@@ -511,6 +370,11 @@ document.addEventListener("DOMContentLoaded", function () {
     urlDisplay.textContent = "";
     urlDisplay.href = "#";
     document.querySelector(".qr-container").classList.add("hidden");
+    const encodingConfirmDiv = document.querySelector(".encoding-confirm");
+    if (encodingConfirmDiv) {
+      encodingConfirmDiv.classList.add("hidden");
+      encodingConfirmDiv.innerHTML = "";
+    }
     qr = null;
     // Re-enable generate button
     generateBtn.disabled = false;
@@ -605,6 +469,200 @@ document.addEventListener("DOMContentLoaded", function () {
       "error"
     );
   });
+
+  async function generateQRCode(validationResult) {
+    console.log("🎨 Generating QR code for URL:", validationResult.originalUrl);
+
+    // Disable generate button and clear previous QR code
+    generateBtn.disabled = true;
+    qrcodeDiv.innerHTML = "";
+    qrcodeContainer.classList.add("hidden");
+
+    try {
+      // Generate new QR code
+      qr = new QRCode(qrcodeDiv, {
+        text: validationResult.originalUrl,
+        width: 256,
+        height: 256,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+
+      // Show QR code
+      qrcodeContainer.classList.remove("hidden");
+
+      // Show best practices section
+      const bestPractices = document.querySelector(".best-practices");
+      if (bestPractices) {
+        bestPractices.style.display = "block";
+      }
+
+      // Display the original URL
+      urlDisplay.textContent = validationResult.originalUrl;
+      urlDisplay.href = validationResult.originalUrl;
+      urlDisplay.style.display = "block";
+
+      showToast("QR Code generated successfully!", "success");
+    } catch (error) {
+      console.error("❌ QR Code generation error:", {
+        error: error,
+        message: error.message,
+        stack: error.stack,
+      });
+      showToast("Failed to generate QR Code", "error");
+      generateBtn.disabled = false;
+    }
+  }
+
+  function resetApp() {
+    if (
+      !urlInput ||
+      !qrcodeDiv ||
+      !qrcodeContainer ||
+      !urlDisplay ||
+      !generateBtn
+    ) {
+      console.error("❌ Required elements not found for reset");
+      return;
+    }
+
+    urlInput.value = "";
+    qrcodeDiv.innerHTML = "";
+    qrcodeContainer.classList.add("hidden");
+    urlDisplay.textContent = "";
+    urlDisplay.href = "#";
+    urlDisplay.style.display = "none";
+    generateBtn.disabled = false;
+    generateBtn.style.opacity = "1";
+    generateBtn.title = "";
+
+    const bestPractices = document.querySelector(".best-practices");
+    if (bestPractices) {
+      bestPractices.style.display = "none";
+    }
+
+    const encodingConfirmDiv = document.querySelector(".encoding-confirm");
+    if (encodingConfirmDiv) {
+      encodingConfirmDiv.classList.add("hidden");
+      encodingConfirmDiv.innerHTML = "";
+    }
+
+    showToast("App reset successfully", "info");
+  }
+
+  function showEncodingWarning(validationResult) {
+    console.log(
+      "⚠️ Showing encoding warning for URL:",
+      validationResult.originalUrl
+    );
+
+    const encodingConfirmDiv = document.querySelector(".encoding-confirm");
+    if (!encodingConfirmDiv) {
+      console.error("❌ Encoding confirm div not found");
+      return;
+    }
+
+    const changes = [];
+
+    // Check for spaces
+    if (validationResult.originalUrl.includes(" ")) {
+      changes.push('Spaces were found and converted to "%20"');
+    }
+
+    // Check for non-ASCII characters
+    const nonAsciiMatches = validationResult.originalUrl.match(/[^\x00-\x7F]/g);
+    if (nonAsciiMatches) {
+      const uniqueChars = [...new Set(nonAsciiMatches)];
+      uniqueChars.forEach((char) => {
+        const encoded = encodeURIComponent(char);
+        changes.push(
+          `Special character "${char}" was converted to "${encoded}"`
+        );
+      });
+    }
+
+    // Check for specific symbols that commonly need encoding
+    const symbolChecks = {
+      "+": "%2B",
+      "&": "%26",
+      "?": "%3F",
+      "#": "%23",
+      "=": "%3D",
+      "%": "%25",
+    };
+
+    Object.entries(symbolChecks).forEach(([symbol, encoded]) => {
+      if (validationResult.originalUrl.includes(symbol)) {
+        changes.push(`Symbol "${symbol}" was converted to "${encoded}"`);
+      }
+    });
+
+    encodingConfirmDiv.innerHTML = `
+      <div class="encoding-details">
+        <h3>Your URL needs to be modified</h3>
+        <div class="encoding-warning">
+          ⚠️ Important: Your URL contains characters that need to be modified to work properly in QR codes.
+          Please review the changes below and confirm if you want to proceed.
+        </div>
+        <div class="changes-list">
+          <p><strong>Required changes to your URL:</strong></p>
+          <ul>
+            ${changes.map((change) => `<li>${change}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="url-comparison">
+          <div class="url-item">
+            <strong>Your Original URL:</strong>
+            <span class="url-text">${validationResult.originalUrl}</span>
+          </div>
+          <div class="url-item">
+            <strong>Modified URL:</strong>
+            <a href="${
+              validationResult.url
+            }" target="_blank" class="url-text">${validationResult.url}</a>
+            <small>👆 Click to verify this modified URL works as expected</small>
+          </div>
+        </div>
+        <div class="encoding-actions">
+          <button id="approve-encoding" class="btn btn-primary">Yes, Generate QR Code with Modified URL</button>
+          <button id="reject-encoding" class="btn btn-secondary">No, Cancel and Reset</button>
+        </div>
+      </div>
+    `;
+
+    encodingConfirmDiv.classList.remove("hidden");
+
+    // Remove any existing event listeners
+    const approveBtn = document.getElementById("approve-encoding");
+    const rejectBtn = document.getElementById("reject-encoding");
+
+    if (!approveBtn || !rejectBtn) {
+      console.error("❌ Encoding action buttons not found");
+      return;
+    }
+
+    // Create new buttons to avoid event listener duplication
+    const newApproveBtn = approveBtn.cloneNode(true);
+    const newRejectBtn = rejectBtn.cloneNode(true);
+    approveBtn.parentNode.replaceChild(newApproveBtn, approveBtn);
+    rejectBtn.parentNode.replaceChild(newRejectBtn, rejectBtn);
+
+    newApproveBtn.addEventListener("click", async () => {
+      // Only hide the action buttons, keep the warning visible
+      const encodingActions =
+        encodingConfirmDiv.querySelector(".encoding-actions");
+      if (encodingActions) {
+        encodingActions.style.display = "none";
+      }
+      await generateQRCode(validationResult);
+    });
+
+    newRejectBtn.addEventListener("click", () => {
+      resetApp();
+      showToast("QR code generation cancelled", "info");
+    });
+  }
 
   console.log("✅ App initialization completed");
 });
