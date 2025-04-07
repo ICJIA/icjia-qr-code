@@ -21,6 +21,50 @@ https://qr.icjia.cloud
 - Node.js >= 18.0.0
 - Yarn >= 1.22.0
 
+## Technical Details
+
+### Build Process
+
+The application uses Vite as its build tool, providing:
+
+- Fast development server with Hot Module Replacement (HMR)
+- Optimized production builds
+- Built-in support for TypeScript, JSX, CSS modules
+- Legacy browser support through @vitejs/plugin-legacy
+
+### Module System
+
+- Uses ES6 modules (ESM) for better tree-shaking and module resolution
+- Dynamic imports for code-splitting
+- Native ES6 module syntax (`import`/`export`)
+- Full support for modern JavaScript features
+
+### Babel Configuration
+
+The project uses Babel for:
+
+- ES6+ feature transpilation
+- Module transformation for testing environment
+- Support for Jest with ES modules
+- Custom configuration for test files
+
+Babel presets and plugins:
+
+```json
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": ["@babel/plugin-transform-modules-commonjs"]
+}
+```
+
+### Testing Environment
+
+- Jest for unit testing
+- ES module support in tests
+- Automated test running with watch mode
+- Coverage reporting
+- Custom test runner configuration for ES modules
+
 ## Installation
 
 1. Clone the repository:
@@ -196,7 +240,7 @@ The test dashboard provides detailed feedback including:
 - Detailed results for each tested URL
 - Visual indicators (✅/❌) for quick status assessment
 
-### Why This Matters
+### Why Testing Matters
 
 QR codes are often used in:
 
