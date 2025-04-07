@@ -319,17 +319,48 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 40px;
+  margin-bottom: 40px;
   position: relative;
-  gap: 15px;
+  gap: 25px;
+  padding: 20px;
+}
+
+/* QR Code Animation */
+@keyframes qrCodeAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1);
+  }
 }
 
 #qrcode {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
-  min-height: 256px;
-  min-width: 256px;
+  margin: 20px 0;
+  min-height: 320px;
+  min-width: 320px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  animation: qrCodeAppear 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+[data-theme="dark"] #qrcode {
+  background-color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .url-display {
@@ -395,9 +426,8 @@ input:checked + .slider:before {
 
 .toast-container {
   position: fixed;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 20px;
+  left: 20px;
   z-index: 9999;
   width: 90%;
   max-width: 400px;
@@ -718,7 +748,7 @@ input:checked + .slider:before {
   margin-top: 2rem;
   display: flex;
   gap: 1rem;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .encoding-actions .btn {
@@ -842,4 +872,308 @@ input:checked + .slider:before {
   .practice-item:hover {
     transform: none;
   }
+}
+
+/* History Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: var(--bg-color);
+  margin: 15vh auto;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  width: 95%;
+  max-width: 1200px;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.modal-header-left {
+  flex: 1;
+}
+
+.modal-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: var(--text-color);
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-color);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-modal:hover {
+  background-color: var(--input-bg);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.history-table-container {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.history-table th,
+.history-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.history-table th {
+  background-color: var(--input-bg);
+  font-weight: 600;
+}
+
+.history-table tbody tr:nth-child(even) {
+  background-color: var(--input-bg);
+}
+
+.history-table tbody tr:hover {
+  background-color: var(--button-primary);
+  color: white;
+}
+
+.history-table a {
+  color: var(--button-primary);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.history-table a:hover {
+  text-decoration: underline;
+}
+
+.history-table tr:hover a {
+  color: white;
+}
+
+.history-table th:last-child,
+.history-table td:last-child {
+  width: 80px;
+  text-align: center;
+}
+
+.generate-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--button-primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  padding: 0;
+}
+
+.generate-icon:hover {
+  background-color: var(--button-primary-hover);
+  transform: scale(1.1);
+}
+
+.generate-icon:active {
+  transform: scale(0.95);
+}
+
+.generate-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.history-table tr:hover .generate-icon {
+  background-color: white;
+  color: var(--button-primary);
+}
+
+.history-table tr:hover .generate-icon:hover {
+  background-color: var(--button-primary);
+  color: white;
+}
+
+/* History Button */
+.history-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--button-neutral);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
+
+.history-btn:hover {
+  background-color: var(--button-neutral-hover);
+  transform: translateY(-2px);
+}
+
+.history-explanation {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--text-color);
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.delete-history-btn {
+  background-color: var(--button-danger);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.delete-history-btn:hover {
+  background-color: var(--button-danger-hover);
+  transform: translateY(-1px);
+}
+
+.delete-history-btn:active {
+  transform: translateY(0);
+}
+
+.delete-history-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Confirmation Dialog Styles */
+.confirmation-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--bg-color);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  z-index: 1001;
+  max-width: 400px;
+  width: 90%;
+}
+
+.confirmation-dialog h3 {
+  margin: 0 0 16px;
+  color: var(--text-color);
+}
+
+.confirmation-dialog p {
+  margin: 0 0 24px;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+.confirmation-dialog .dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirmation-dialog button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 120px;
+}
+
+.confirmation-dialog .cancel-btn {
+  background-color: var(--button-neutral);
+  color: white;
+}
+
+.confirmation-dialog .confirm-btn {
+  background-color: var(--button-danger);
+  color: white;
+}
+
+.confirmation-dialog .cancel-btn:hover {
+  background-color: var(--button-neutral-hover);
+}
+
+.confirmation-dialog .confirm-btn:hover {
+  background-color: var(--button-danger-hover);
+}
+
+/* Improve link contrast in dark mode */
+[data-theme="dark"] a {
+  color: #7CB9FF; /* This blue provides >8:1 contrast ratio against dark backgrounds */
+}
+
+[data-theme="dark"] .history-table a {
+  color: #7CB9FF;
+}
+
+[data-theme="dark"] .url-display {
+  color: #7CB9FF;
+}
+
+[data-theme="dark"] .history-table tr:hover a {
+  color: white; /* Keep white for contrast when row is highlighted */
 } 

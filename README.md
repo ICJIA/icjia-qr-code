@@ -156,6 +156,66 @@ For detailed technical specifications and deeper understanding:
 3. **Contrast**: Maintain high contrast between dark and light elements
 4. **Quiet Zone**: Leave white space around the QR code for better scanning
 
+## URL Validation and Testing
+
+The application includes comprehensive URL validation and testing to ensure QR codes are only generated for valid, well-formed URLs. This is crucial because QR codes often appear in printed materials, signage, or other physical media where invalid URLs cannot be easily corrected after publication.
+
+### Validation Features
+
+- Protocol validation (only HTTP/HTTPS allowed)
+- Strict TLD validation (.com, .org, .net, .edu, .gov)
+- Special character handling and URL encoding
+- Domain format verification
+- Whitespace and malformed URL detection
+
+### Automated Testing
+
+The test suite (`test/url-validation.test.js`) includes:
+
+- 40 automated tests (20 valid URLs, 20 invalid URLs)
+- Random URL generation for comprehensive edge case coverage
+- Tests for various URL components:
+  - Different protocols (http, https, ftp)
+  - Various TLDs
+  - Path components
+  - Query parameters
+  - Special characters
+  - Common malformed patterns
+
+### Running Tests
+
+```bash
+yarn test           # Run tests once
+yarn test:watch    # Run tests in watch mode
+```
+
+The test dashboard provides detailed feedback including:
+
+- Total test count and pass/fail rates
+- Success percentage
+- Detailed results for each tested URL
+- Visual indicators (✅/❌) for quick status assessment
+
+### Why This Matters
+
+QR codes are often used in:
+
+- Printed marketing materials
+- Business cards
+- Physical signage
+- Product packaging
+- Educational materials
+
+Invalid URLs in these contexts can lead to:
+
+- Poor user experience
+- Lost business opportunities
+- Wasted print materials
+- Damaged brand reputation
+- Unnecessary reprinting costs
+
+Our strict validation ensures that generated QR codes will reliably direct users to their intended destinations, protecting both the creator and end-user from common URL-related issues.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

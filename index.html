@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -133,6 +133,63 @@
       </div>
 
       <div class="toast-container" role="status" aria-live="polite"></div>
+
+      <!-- QR Code History Modal -->
+      <div
+        id="history-modal"
+        class="modal hidden"
+        role="dialog"
+        aria-labelledby="history-modal-title"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-left">
+              <h2 id="history-modal-title">My QR Codes</h2>
+              <p class="history-explanation">
+                Your QR code history is stored locally in your browser and can
+                be deleted at any time.
+              </p>
+            </div>
+            <div class="modal-header-right">
+              <button
+                id="delete-history-btn"
+                class="delete-history-btn"
+                aria-label="Delete QR code history"
+              >
+                Delete History
+              </button>
+              <button class="close-modal" aria-label="Close modal">
+                &times;
+              </button>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="history-table-container">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>Original URL</th>
+                    <th>Encoded URL</th>
+                    <th>Generate</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body">
+                  <!-- History items will be inserted here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
+        id="history-btn"
+        class="history-btn"
+        aria-label="View QR code history"
+      >
+        My QR Codes
+      </button>
     </div>
 
     <script src="script.js" defer></script>

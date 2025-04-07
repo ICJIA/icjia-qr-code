@@ -216,9 +216,17 @@ document.addEventListener("DOMContentLoaded", function () {
   generateBtn.addEventListener("click", async function () {
     console.log("🎯 Generate button clicked");
     const url = urlInput.value;
+
+    // Disable the button immediately
+    generateBtn.disabled = true;
+    generateBtn.style.opacity = "0.6";
+
     if (!url) {
       console.warn("❌ No URL provided");
       showToast("Please enter a URL", "error");
+      // Re-enable button for empty field error
+      generateBtn.disabled = false;
+      generateBtn.style.opacity = "1";
       return;
     }
 
@@ -226,6 +234,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!validationResult.isValid) {
       console.warn("❌ URL validation failed:", validationResult.error);
       showToast(validationResult.error, "error");
+      // Re-enable button for validation error
+      generateBtn.disabled = false;
+      generateBtn.style.opacity = "1";
       return;
     }
 
@@ -470,6 +481,161 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   });
 
+  // History functionality
+  const HISTORY_STORAGE_KEY = "qrCodeHistory";
+  const MAX_HISTORY_ITEMS = 50;
+
+  function addToHistory(validationResult) {
+    const history = getHistory();
+    const newItem = {
+      timestamp: new Date().toISOString(),
+      originalUrl: validationResult.originalUrl,
+      encodedUrl: validationResult.url,
+    };
+
+    // Add new item to the beginning of the array
+    history.unshift(newItem);
+
+    // Keep only the most recent items
+    if (history.length > MAX_HISTORY_ITEMS) {
+      history.length = MAX_HISTORY_ITEMS;
+    }
+
+    // Save to localStorage
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+  }
+
+  function getHistory() {
+    const historyJson = localStorage.getItem(HISTORY_STORAGE_KEY);
+    return historyJson ? JSON.parse(historyJson) : [];
+  }
+
+  function formatDateTime(isoString) {
+    const date = new Date(isoString);
+    return date.toLocaleString();
+  }
+
+  function showHistoryModal() {
+    const modal = document.getElementById("history-modal");
+    const tbody = document.getElementById("history-table-body");
+    const history = getHistory();
+
+    // Clear existing rows
+    tbody.innerHTML = "";
+
+    if (history.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center;">No QR codes generated yet</td>
+        </tr>
+      `;
+    } else {
+      // Add history items to table
+      history.forEach((item) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${formatDateTime(item.timestamp)}</td>
+          <td>${item.originalUrl}</td>
+          <td><a href="${item.encodedUrl}" target="_blank" rel="noopener noreferrer">${item.encodedUrl}</a></td>
+          <td>
+            <button class="generate-icon" aria-label="Generate QR code for this URL">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+              </svg>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+
+        // Add click handler for the generate button
+        const generateBtn = row.querySelector(".generate-icon");
+        generateBtn.addEventListener("click", () => {
+          // Close the modal
+          hideHistoryModal();
+
+          // Reset the app
+          resetApp();
+
+          // Populate the URL input with the encoded URL
+          urlInput.value = item.encodedUrl;
+
+          // Generate the QR code
+          const validationResult = {
+            isValid: true,
+            url: item.encodedUrl,
+            originalUrl: item.originalUrl,
+          };
+          generateQRCode(validationResult);
+        });
+
+        // Add click handler for the entire row
+        row.addEventListener("click", (e) => {
+          // Don't trigger if clicking on the generate button or URL link
+          if (e.target.closest(".generate-icon") || e.target.closest("a")) {
+            return;
+          }
+
+          // Close the modal
+          hideHistoryModal();
+
+          // Reset the app
+          resetApp();
+
+          // Populate the URL input with the encoded URL
+          urlInput.value = item.encodedUrl;
+
+          // Generate the QR code
+          const validationResult = {
+            isValid: true,
+            url: item.encodedUrl,
+            originalUrl: item.originalUrl,
+          };
+          generateQRCode(validationResult);
+        });
+      });
+    }
+
+    modal.classList.remove("hidden");
+  }
+
+  function hideHistoryModal() {
+    const modal = document.getElementById("history-modal");
+    modal.classList.add("hidden");
+  }
+
+  // Add history button to the page
+  const historyButton = document.createElement("button");
+  historyButton.className = "history-btn";
+  historyButton.textContent = "My QR Codes";
+  historyButton.addEventListener("click", showHistoryModal);
+  document.body.appendChild(historyButton);
+
+  // Add close button event listener
+  document
+    .querySelector(".close-modal")
+    .addEventListener("click", hideHistoryModal);
+
+  // Close modal when clicking outside
+  document.getElementById("history-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) {
+      hideHistoryModal();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hideHistoryModal();
+    }
+  });
+
+  // Modify the generateQRCode function to save to history
+  const originalGenerateQRCode = generateQRCode;
+  generateQRCode = async function (validationResult) {
+    await originalGenerateQRCode(validationResult);
+    addToHistory(validationResult);
+  };
+
   async function generateQRCode(validationResult) {
     console.log("🎨 Generating QR code for URL:", validationResult.originalUrl);
 
@@ -482,8 +648,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // Generate new QR code
       qr = new QRCode(qrcodeDiv, {
         text: validationResult.originalUrl,
-        width: 256,
-        height: 256,
+        width: 320,
+        height: 320,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H,
@@ -533,6 +699,8 @@ document.addEventListener("DOMContentLoaded", function () {
     urlDisplay.textContent = "";
     urlDisplay.href = "#";
     urlDisplay.style.display = "none";
+
+    // Re-enable generate button
     generateBtn.disabled = false;
     generateBtn.style.opacity = "1";
     generateBtn.title = "";
@@ -663,6 +831,90 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("QR code generation cancelled", "info");
     });
   }
+
+  // Delete History Functionality
+  const deleteHistoryBtn = document.getElementById("delete-history-btn");
+
+  function showConfirmationDialog() {
+    const dialog = document.createElement("div");
+    dialog.className = "confirmation-dialog";
+    dialog.innerHTML = `
+      <h3>Delete History</h3>
+      <p>Are you sure you want to delete all your QR code history? This action cannot be undone.</p>
+      <div class="dialog-buttons">
+        <button class="cancel-btn" autofocus>No, Cancel</button>
+        <button class="confirm-btn">Yes, Delete All</button>
+      </div>
+    `;
+
+    document.body.appendChild(dialog);
+
+    const cancelBtn = dialog.querySelector(".cancel-btn");
+    const confirmBtn = dialog.querySelector(".confirm-btn");
+
+    // Add event listeners
+    cancelBtn.addEventListener("click", () => {
+      dialog.remove();
+    });
+
+    confirmBtn.addEventListener("click", () => {
+      // Clear history from localStorage
+      localStorage.removeItem(HISTORY_STORAGE_KEY);
+
+      // Update the table
+      const tbody = document.getElementById("history-table-body");
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" style="text-align: center;">No QR codes generated yet</td>
+        </tr>
+      `;
+
+      // Show success message
+      showToast("History deleted successfully", "success");
+
+      // Remove dialog
+      dialog.remove();
+    });
+
+    // Close dialog when clicking outside
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) {
+        dialog.remove();
+      }
+    });
+
+    // Handle keyboard events
+    const handleKeydown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        dialog.remove();
+        document.removeEventListener("keydown", handleKeydown);
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        cancelBtn.click(); // Always trigger Cancel on Enter
+      } else if (e.key === "Tab") {
+        // Keep focus within the dialog
+        const focusableElements = dialog.querySelectorAll("button");
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeydown);
+
+    // Focus the cancel button by default
+    cancelBtn.focus();
+  }
+
+  deleteHistoryBtn.addEventListener("click", showConfirmationDialog);
 
   console.log("✅ App initialization completed");
 });
