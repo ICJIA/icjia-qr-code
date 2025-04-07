@@ -1,6 +1,6 @@
 # QR Code Generator
 
-A simple web app that generates QR codes from URLs using javascript.
+A modern, accessible QR code generator application built with vanilla JavaScript and Vite.
 
 ## Site
 
@@ -8,18 +8,72 @@ https://qr.icjia.cloud
 
 ## Features
 
-- Generate QR codes from any valid URL
-- Smart URL validation and encoding with user confirmation
+- Generate QR codes from URLs
+- Dark/Light theme support
 - Multiple download formats (PNG, JPG, WEBP, SVG)
-- Copy QR codes directly to clipboard
-- Light/Dark theme support with persistent preferences
-- Responsive design that works on mobile and desktop
-- Comprehensive error handling and user feedback
-- Detailed console logging for debugging
-- Toast notifications for user feedback
-- Accessibility features (ARIA labels, keyboard navigation)
-- High contrast mode support
-- Reduced motion support
+- Copy to clipboard functionality
+- URL validation and encoding
+- Responsive design
+- Accessibility features
+
+## Prerequisites
+
+- Node.js >= 18.0.0
+- Yarn >= 1.22.0
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/icjia-qr-code.git
+   cd icjia-qr-code
+   ```
+
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
+
+## Development
+
+To start the development server:
+
+```bash
+yarn dev
+```
+
+This will start the Vite development server at http://localhost:3000.
+
+## Building for Production
+
+To build the application for production:
+
+```bash
+yarn build
+```
+
+The built files will be in the `dist` directory.
+
+## Preview Production Build
+
+To preview the production build locally:
+
+```bash
+yarn preview
+```
+
+## Scripts
+
+- `yarn dev` - Start development server
+- `yarn build` - Build for production
+- `yarn preview` - Preview production build
+- `yarn lint` - Run ESLint
+- `yarn format` - Format code with Prettier
+
+## Browser Support
+
+The application supports all modern browsers. Legacy browser support is provided through the `@vitejs/plugin-legacy` plugin.
 
 ## Recent Updates
 
@@ -101,79 +155,6 @@ For detailed technical specifications and deeper understanding:
 2. **Size**: Ensure the QR code is large enough to scan (minimum 2x2 cm / 0.8x0.8 inches)
 3. **Contrast**: Maintain high contrast between dark and light elements
 4. **Quiet Zone**: Leave white space around the QR code for better scanning
-
-## Installation
-
-### Requirements
-
-- Node.js version 20.x or higher
-- Modern web browser with JavaScript enabled
-
-### Local Installation
-
-1. Clone this repository:
-
-```bash
-git clone https://github.com/icjia/icjia-qr-code.git
-cd icjia-qr-code
-```
-
-2. Open `index.html` in your web browser:
-
-   - Double click the file
-   - Or serve it using a local server:
-
-     ```bash
-     # Using Python 3
-     python -m http.server 8000
-
-     # Using Node.js's http-server (needs to be installed globally)
-     npm install -g http-server
-     http-server
-     ```
-
-### Server Installation
-
-1. Upload the contents to your web server:
-
-   - Upload all files to your desired directory
-   - No build process required
-   - No database required
-
-2. Access the application through your web browser:
-   ```
-   https://your-domain.com/path-to-app/index.html
-   ```
-
-## Development
-
-### Console Logging
-
-The application includes comprehensive console logging for debugging purposes. All major events and operations are logged to the console with appropriate emoji indicators:
-
-- 🚀 App initialization
-- 🔍 URL validation
-- 🎨 QR code generation
-- 📋 Clipboard operations
-- 💾 Download operations
-- ❌ Errors and warnings
-- ✅ Success messages
-
-### Error Handling
-
-The application includes robust error handling for:
-
-- Invalid URLs
-- Missing browser features
-- QR code generation failures
-- Clipboard operation failures
-- Download failures
-- Unhandled promise rejections
-- Global errors
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

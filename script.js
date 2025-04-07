@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     encodingConfirmDiv.innerHTML = `
       <div class="encoding-details">
-        <h3>Your URL needs to be modified</h3>
+        <h3>I need to modify your URL</h3>
         <div class="encoding-warning">
           ⚠️ Important: Your URL contains characters that need to be modified to work properly in QR codes.
           Please review the changes below and confirm if you want to proceed.
