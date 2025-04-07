@@ -2,8 +2,17 @@ export function sanitizeAndValidateURL(input) {
   try {
     const sanitizedUrl = input.trim();
 
+    // Check for multiple trailing slashes and fix them
+    const hasDoubleTrailingSlash = /[\/]{2,}$/.test(sanitizedUrl);
+    let correctedUrl = hasDoubleTrailingSlash
+      ? sanitizedUrl.replace(/[\/]+$/, "/") // Replace multiple trailing slashes with a single one
+      : sanitizedUrl;
+
+    // Normalize multiple consecutive slashes in the path
+    correctedUrl = correctedUrl.replace(/([^:]\/)\/+/g, "$1");
+
     // Require URL to start with http:// or https://
-    if (!/^https?:\/\//i.test(sanitizedUrl)) {
+    if (!/^https?:\/\//i.test(correctedUrl)) {
       return {
         isValid: false,
         error: "URL must start with 'http://' or 'https://'",
@@ -11,7 +20,7 @@ export function sanitizeAndValidateURL(input) {
     }
 
     // Parse URL to validate structure
-    const urlObject = new URL(sanitizedUrl);
+    const urlObject = new URL(correctedUrl);
 
     // Ensure only http or https protocols are allowed
     if (!["http:", "https:"].includes(urlObject.protocol)) {
@@ -23,7 +32,7 @@ export function sanitizeAndValidateURL(input) {
 
     // Check for valid hostname (must have at least one dot and valid TLD)
     const hostname = urlObject.hostname;
-    const validTLDs = ["com", "org", "net", "edu", "gov"];
+    const validTLDs = ["com", "org", "net", "edu", "gov", "eu"];
     const tld = hostname.split(".").pop();
 
     if (!hostname.includes(".") || !validTLDs.includes(tld)) {
@@ -33,8 +42,18 @@ export function sanitizeAndValidateURL(input) {
       };
     }
 
+    // If we found multiple trailing slashes, return warning with corrected URL
+    if (hasDoubleTrailingSlash) {
+      return {
+        isValid: true,
+        warning: "Double trailing slash detected",
+        originalUrl: sanitizedUrl,
+        suggestedUrl: correctedUrl,
+      };
+    }
+
     // Create encoded version
-    const encodedUrl = new URL(sanitizedUrl);
+    const encodedUrl = new URL(correctedUrl);
     let needsEncoding = false;
 
     // Check pathname for spaces and special characters
@@ -47,12 +66,17 @@ export function sanitizeAndValidateURL(input) {
     }
 
     // Check search params
-    if (
-      urlObject.search &&
-      urlObject.search.slice(1) !==
-        encodeURIComponent(urlObject.search.slice(1))
-    ) {
-      needsEncoding = true;
+    if (urlObject.search) {
+      const searchParams = new URLSearchParams(urlObject.search);
+      for (const [key, value] of searchParams.entries()) {
+        if (
+          key !== encodeURIComponent(key) ||
+          value !== encodeURIComponent(value)
+        ) {
+          needsEncoding = true;
+          break;
+        }
+      }
     }
 
     // Check hash
@@ -67,8 +91,8 @@ export function sanitizeAndValidateURL(input) {
     if (!needsEncoding) {
       return {
         isValid: true,
-        url: sanitizedUrl,
-        originalUrl: sanitizedUrl,
+        url: correctedUrl,
+        originalUrl: correctedUrl,
       };
     }
 
@@ -77,9 +101,27 @@ export function sanitizeAndValidateURL(input) {
       .map((part) => (part ? encodeURIComponent(decodeURIComponent(part)) : ""))
       .join("/");
 
+    // Handle query parameters properly
     if (urlObject.search) {
-      encodedUrl.search =
-        "?" + encodeURIComponent(decodeURIComponent(urlObject.search.slice(1)));
+      const searchParams = new URLSearchParams(urlObject.search);
+      const encodedParams = [];
+
+      for (const [key, value] of searchParams.entries()) {
+        // First decode any already encoded values
+        const decodedKey = decodeURIComponent(key);
+        const decodedValue = decodeURIComponent(value);
+
+        // Encode special characters directly
+        const encodedValue = decodedValue
+          .replace(/!/g, "%21")
+          .replace(/@/g, "%40")
+          .replace(/#/g, "%23")
+          .replace(/\$/g, "%24");
+
+        encodedParams.push(`${encodeURIComponent(decodedKey)}=${encodedValue}`);
+      }
+
+      encodedUrl.search = `?${encodedParams.join("&")}`;
     }
 
     if (urlObject.hash) {

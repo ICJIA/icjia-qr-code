@@ -1,21 +1,21 @@
-import { defineConfig } from 'vite';
-import legacy from '@vitejs/plugin-legacy';
+import { defineConfig } from "vite";
+import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
   plugins: [
     legacy({
-      targets: ['defaults', 'not IE 11'],
+      targets: ["defaults", "not IE 11"],
     }),
   ],
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    outDir: "dist",
+    assetsDir: "assets",
     sourcemap: true,
-    minify: 'terser',
+    minify: "terser",
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['qrcode', 'file-saver'],
+          vendor: ["qrcode", "file-saver"],
         },
       },
     },
@@ -27,4 +27,4 @@ export default defineConfig({
   preview: {
     port: 3000,
   },
-}); 
+});

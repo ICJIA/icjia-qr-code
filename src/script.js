@@ -1,4 +1,4 @@
-import { sanitizeAndValidateURL } from "@/utils/url-validator.js";
+import { sanitizeAndValidateURL } from "./utils/url-validator.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("🚀 App initialization started");
@@ -62,120 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const loadingIndicator = document.querySelector(".loading-indicator");
 
   let qr = null;
-
-  // URL validation and sanitization
-  function sanitizeAndValidateURL(input) {
-    console.log("🔍 Validating URL:", input);
-    try {
-      const sanitizedUrl = input.trim();
-
-      // Require URL to start with http:// or https://
-      if (!/^https?:\/\//i.test(sanitizedUrl)) {
-        console.warn("❌ URL validation failed: Missing http(s) protocol");
-        return {
-          isValid: false,
-          error: "URL must start with 'http://' or 'https://'",
-        };
-      }
-
-      // Parse URL to validate structure
-      const urlObject = new URL(sanitizedUrl);
-
-      // Ensure only http or https protocols are allowed
-      if (!["http:", "https:"].includes(urlObject.protocol)) {
-        console.warn(
-          "❌ URL validation failed: Invalid protocol",
-          urlObject.protocol
-        );
-        return {
-          isValid: false,
-          error: "Only HTTP and HTTPS protocols are allowed",
-        };
-      }
-
-      // Check for valid hostname (must have at least one dot and valid TLD)
-      const hostname = urlObject.hostname;
-      if (!hostname.includes(".") || !/\.[a-z]{2,}$/i.test(hostname)) {
-        console.warn(
-          "❌ URL validation failed: Invalid hostname format",
-          hostname
-        );
-        return {
-          isValid: false,
-          error: "Invalid domain format. Please check the URL",
-        };
-      }
-
-      // Create encoded version
-      const encodedUrl = new URL(sanitizedUrl);
-      let needsEncoding = false;
-
-      // Check pathname for spaces and special characters
-      const pathParts = urlObject.pathname.split("/");
-      for (const part of pathParts) {
-        if (part && part !== encodeURIComponent(part)) {
-          needsEncoding = true;
-          break;
-        }
-      }
-
-      // Check search params
-      if (
-        urlObject.search &&
-        urlObject.search.slice(1) !==
-          encodeURIComponent(urlObject.search.slice(1))
-      ) {
-        needsEncoding = true;
-      }
-
-      // Check hash
-      if (
-        urlObject.hash &&
-        urlObject.hash.slice(1) !== encodeURIComponent(urlObject.hash.slice(1))
-      ) {
-        needsEncoding = true;
-      }
-
-      // If no encoding needed, return original
-      if (!needsEncoding) {
-        return {
-          isValid: true,
-          url: sanitizedUrl,
-          originalUrl: sanitizedUrl,
-        };
-      }
-
-      // Encode URL parts
-      encodedUrl.pathname = pathParts
-        .map((part) =>
-          part ? encodeURIComponent(decodeURIComponent(part)) : ""
-        )
-        .join("/");
-
-      if (urlObject.search) {
-        encodedUrl.search =
-          "?" +
-          encodeURIComponent(decodeURIComponent(urlObject.search.slice(1)));
-      }
-
-      if (urlObject.hash) {
-        encodedUrl.hash =
-          "#" + encodeURIComponent(decodeURIComponent(urlObject.hash.slice(1)));
-      }
-
-      return {
-        isValid: true,
-        url: encodedUrl.toString(),
-        originalUrl: sanitizedUrl,
-      };
-    } catch (error) {
-      console.error("❌ URL validation error:", error);
-      return {
-        isValid: false,
-        error: "Invalid URL format. Please check the URL",
-      };
-    }
-  }
 
   // Add input event listener to reset everything when user starts typing
   urlInput.addEventListener("input", () => {
@@ -645,7 +531,18 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   async function generateQRCode(validationResult) {
-    console.log("🎨 Generating QR code for URL:", validationResult.originalUrl);
+    console.log(
+      "🎨 Generating QR code for URL:",
+      validationResult.url ||
+        validationResult.suggestedUrl ||
+        validationResult.originalUrl
+    );
+
+    // Always use the corrected/encoded URL for both QR code and display
+    const urlToUse =
+      validationResult.url ||
+      validationResult.suggestedUrl ||
+      validationResult.originalUrl;
 
     // Disable generate button and clear previous QR code
     generateBtn.disabled = true;
@@ -653,9 +550,9 @@ document.addEventListener("DOMContentLoaded", function () {
     qrcodeContainer.classList.add("hidden");
 
     try {
-      // Generate new QR code
+      // Generate new QR code with the corrected/encoded URL
       qr = new QRCode(qrcodeDiv, {
-        text: validationResult.originalUrl,
+        text: urlToUse,
         width: 320,
         height: 320,
         colorDark: "#000000",
@@ -672,9 +569,9 @@ document.addEventListener("DOMContentLoaded", function () {
         bestPractices.style.display = "block";
       }
 
-      // Display the original URL
-      urlDisplay.textContent = validationResult.originalUrl;
-      urlDisplay.href = validationResult.originalUrl;
+      // Display the corrected/encoded URL
+      urlDisplay.textContent = urlToUse;
+      urlDisplay.href = urlToUse;
       urlDisplay.style.display = "block";
 
       showToast("QR Code generated successfully!", "success");
@@ -847,12 +744,21 @@ document.addEventListener("DOMContentLoaded", function () {
     encodingConfirmDiv.classList.remove("hidden");
     encodingConfirmDiv.innerHTML = `
       <div class="encoding-warning">
-        <p>⚠️ Double trailing slash detected in URL</p>
-        <p>Original URL: <span class="url-display">${validationResult.originalUrl}</span></p>
-        <p>Suggested URL: <span class="url-display">${validationResult.suggestedUrl}</span></p>
+        <h3>⚠️ URL Format Warning</h3>
+        <p>Your URL contains a double trailing slash, which is incorrect. This should be fixed.</p>
+        <div class="url-comparison">
+          <div class="url-item">
+            <strong>Your URL (Incorrect):</strong>
+            <span class="url-text">${validationResult.originalUrl}</span>
+          </div>
+          <div class="url-item">
+            <strong>Corrected URL:</strong>
+            <span class="url-text">${validationResult.suggestedUrl}</span>
+          </div>
+        </div>
         <div class="encoding-actions">
-          <button class="approve-btn">Yes, use corrected URL</button>
-          <button class="reject-btn">No, keep original</button>
+          <button class="approve-btn btn btn-primary">Use corrected URL</button>
+          <button class="reject-btn btn btn-secondary">Cancel</button>
         </div>
       </div>
     `;
@@ -862,9 +768,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     approveBtn.addEventListener("click", async () => {
       const correctedResult = {
-        ...validationResult,
+        isValid: true,
         url: validationResult.suggestedUrl,
         originalUrl: validationResult.originalUrl,
+        suggestedUrl: validationResult.suggestedUrl,
       };
       await generateQRCode(correctedResult);
     });
@@ -873,6 +780,10 @@ document.addEventListener("DOMContentLoaded", function () {
       resetApp();
       showToast("QR code generation cancelled", "info");
     });
+
+    // Re-enable the generate button
+    generateBtn.disabled = false;
+    generateBtn.style.opacity = "1";
   }
 
   // Delete History Functionality

@@ -9,8 +9,8 @@
         "preview": "vite preview",
         "lint": "eslint . --ext js --fix",
         "format": "prettier --write .",
-        "test": "NODE_OPTIONS=--experimental-vm-modules jest --verbose",
-        "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --verbose"
+        "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --verbose",
+        "test:watch": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch --verbose"
     },
     "dependencies": {
         "file-saver": "^2.0.5",
@@ -32,21 +32,5 @@
         "node": ">=18.0.0",
         "yarn": ">=1.22.0"
     },
-    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
-    "jest": {
-        "testEnvironment": "node",
-        "verbose": true,
-        "testMatch": [
-            "**/test/**/*.test.js"
-        ],
-        "collectCoverage": true,
-        "coverageReporters": [
-            "text",
-            "html"
-        ],
-        "coverageDirectory": "coverage",
-        "transform": {
-            "^.+\\.js$": "babel-jest"
-        }
-    }
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

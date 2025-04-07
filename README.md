@@ -14,7 +14,6 @@ https://qr.icjia.cloud
 - Copy to clipboard functionality
 - URL validation and encoding
 - Responsive design
-- Accessibility features
 
 ## Prerequisites
 
@@ -211,20 +210,43 @@ The application includes comprehensive URL validation and testing to ensure QR c
 - Special character handling and URL encoding
 - Domain format verification
 - Whitespace and malformed URL detection
+- Double trailing slash detection and correction
+- Multiple consecutive slash normalization
 
 ### Automated Testing
 
-The test suite (`test/url-validation.test.js`) includes:
+The test suite (`test/url-validation.test.js`) includes 37 automated tests across multiple categories:
 
-- 40 automated tests (20 valid URLs, 20 invalid URLs)
-- Random URL generation for comprehensive edge case coverage
-- Tests for various URL components:
-  - Different protocols (http, https, ftp)
-  - Various TLDs
-  - Path components
-  - Query parameters
-  - Special characters
-  - Common malformed patterns
+1. **URL Validation Tests (30 cases)**
+
+   - 15 valid URL tests with random generation
+   - 15 invalid URL tests with various error cases
+   - Tests for protocols, TLDs, paths, and query parameters
+
+2. **URL Encoding Tests (4 cases)**
+
+   - Double trailing slash handling
+   - URL with spaces
+   - URL with special characters (non-ASCII)
+   - Multiple consecutive slashes
+
+3. **Double Trailing Slash Tests (3 cases)**
+   - Basic double trailing slash
+   - Path with double trailing slash
+   - Query parameters with double trailing slash
+
+### Test Coverage
+
+The test suite covers:
+
+- Protocol validation (http://, https://, ftp://)
+- TLD validation (.com, .org, .net, .edu, .gov)
+- Path components and normalization
+- Query parameter handling
+- Special character encoding
+- Common malformed patterns
+- Unicode character handling
+- URL normalization rules
 
 ### Running Tests
 
@@ -233,12 +255,12 @@ yarn test           # Run tests once
 yarn test:watch    # Run tests in watch mode
 ```
 
-The test dashboard provides detailed feedback including:
+The test output provides:
 
-- Total test count and pass/fail rates
-- Success percentage
-- Detailed results for each tested URL
+- Detailed pass/fail status for each test case
+- Success rate percentage
 - Visual indicators (✅/❌) for quick status assessment
+- Comprehensive test summaries by category
 
 ### Why Testing Matters
 
@@ -258,7 +280,7 @@ Invalid URLs in these contexts can lead to:
 - Damaged brand reputation
 - Unnecessary reprinting costs
 
-Our strict validation ensures that generated QR codes will reliably direct users to their intended destinations, protecting both the creator and end-user from common URL-related issues.
+Our comprehensive test suite ensures that generated QR codes will reliably direct users to their intended destinations, protecting both the creator and end-user from common URL-related issues.
 
 ## License
 
