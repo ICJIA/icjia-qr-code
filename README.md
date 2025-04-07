@@ -1,6 +1,6 @@
 # QR Code Generator
 
-A simple, responsive web application that generates QR codes from URLs. Built with vanilla JavaScript and featuring both light and dark themes.
+A simple web app that generates QR codes from URLs using javascript.
 
 ## Site
 
@@ -9,10 +9,29 @@ https://qr.icjia.cloud
 ## Features
 
 - Generate QR codes from any valid URL
+- Smart URL validation and encoding with user confirmation
+- Multiple download formats (PNG, JPG, WEBP, SVG)
 - Copy QR codes directly to clipboard
 - Light/Dark theme support with persistent preferences
 - Responsive design that works on mobile and desktop
+- Comprehensive error handling and user feedback
+- Detailed console logging for debugging
 - Toast notifications for user feedback
+- Accessibility features (ARIA labels, keyboard navigation)
+- High contrast mode support
+- Reduced motion support
+
+## Recent Updates
+
+- Enhanced URL validation and encoding with user confirmation
+- Added multiple download format options (PNG, JPG, WEBP, SVG)
+- Improved error handling and user feedback
+- Added comprehensive console logging
+- Improved accessibility features
+- Added support for high contrast mode
+- Added support for reduced motion preferences
+- Improved toast notification system
+- Added automatic app state reset when entering new URLs
 
 ## What is a QR Code?
 
@@ -20,7 +39,7 @@ A QR (Quick Response) code is a two-dimensional barcode that can store data such
 
 ### How QR Codes Work
 
-QR codes are a kind of of two-dimensional barcode. QR codes use a specific encoding process to convert data into visual patterns:
+QR codes are a kind of two-dimensional barcode. QR codes use a specific encoding process to convert data into visual patterns:
 
 1. **Data Analysis**
 
@@ -85,6 +104,11 @@ For detailed technical specifications and deeper understanding:
 
 ## Installation
 
+### Requirements
+
+- Node.js version 20.x or higher
+- Modern web browser with JavaScript enabled
+
 ### Local Installation
 
 1. Clone this repository:
@@ -112,7 +136,7 @@ cd icjia-qr-code
 
 1. Upload the contents to your web server:
 
-   - Upload `index.html` to your desired directory
+   - Upload all files to your desired directory
    - No build process required
    - No database required
 
@@ -121,6 +145,36 @@ cd icjia-qr-code
    https://your-domain.com/path-to-app/index.html
    ```
 
-## Licensing
+## Development
 
-This project is licensed under the MIT License - see the [MIT License](https://opensource.org/licenses/MIT) for details.
+### Console Logging
+
+The application includes comprehensive console logging for debugging purposes. All major events and operations are logged to the console with appropriate emoji indicators:
+
+- 🚀 App initialization
+- 🔍 URL validation
+- 🎨 QR code generation
+- 📋 Clipboard operations
+- 💾 Download operations
+- ❌ Errors and warnings
+- ✅ Success messages
+
+### Error Handling
+
+The application includes robust error handling for:
+
+- Invalid URLs
+- Missing browser features
+- QR code generation failures
+- Clipboard operation failures
+- Download failures
+- Unhandled promise rejections
+- Global errors
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
