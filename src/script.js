@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const copyBtn = document.querySelector("#copy-btn");
   const downloadBtn = document.querySelector("#download-btn");
   const resetBtn = document.querySelector("#reset-btn");
+  // Format select is used in the download function
   const formatSelect = document.querySelector("#format-select");
-  const loadingIndicator = document.querySelector(".loading-indicator");
 
   let qr = null;
 
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
       downloadBtn.disabled = true;
 
       const canvas = qrcodeDiv.querySelector("canvas");
-      const format = document.getElementById("format-select").value;
+      const format = formatSelect.value;
       const url = urlDisplay.href;
 
       console.log("📦 Preparing download:", { format, url });
@@ -332,18 +332,53 @@ document.addEventListener("DOMContentLoaded", function () {
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
 
+    // Add appropriate ARIA attributes based on message type
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", type === "error" ? "assertive" : "polite");
+
+    // Add an icon based on the type for visual users
+    const iconSpan = document.createElement("span");
+    iconSpan.className = "toast-icon";
+    iconSpan.setAttribute("aria-hidden", "true");
+
+    switch(type) {
+      case "error":
+        iconSpan.textContent = "❌ ";
+        toast.setAttribute("aria-label", `Error: ${message}`);
+        break;
+      case "success":
+        iconSpan.textContent = "✅ ";
+        toast.setAttribute("aria-label", `Success: ${message}`);
+        break;
+      case "info":
+        iconSpan.textContent = "ℹ️ ";
+        toast.setAttribute("aria-label", `Information: ${message}`);
+        break;
+      case "warning":
+        iconSpan.textContent = "⚠️ ";
+        toast.setAttribute("aria-label", `Warning: ${message}`);
+        break;
+      default:
+        iconSpan.textContent = "";
+    }
+
     // Handle multiline messages
+    const messageContainer = document.createElement("div");
+    messageContainer.className = "toast-message";
+
     if (message.includes("\n")) {
       message.split("\n").forEach((line) => {
         const p = document.createElement("p");
         p.textContent = line.trim();
-        toast.appendChild(p);
+        messageContainer.appendChild(p);
       });
     } else {
-      toast.textContent = message;
+      messageContainer.textContent = message;
     }
 
-    toast.setAttribute("role", "alert");
+    // Add the icon and message to the toast
+    toast.appendChild(iconSpan);
+    toast.appendChild(messageContainer);
 
     // Add the toast to the container
     toastContainer.appendChild(toast);
@@ -593,6 +628,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Show QR code
       qrcodeContainer.classList.remove("hidden");
+
+      // Enhance accessibility for the QR code
+      const qrImage = qrcodeDiv.querySelector("img");
+      if (qrImage) {
+        qrImage.alt = `QR code for ${urlToUse}`;
+        qrImage.setAttribute("role", "img");
+        qrImage.setAttribute("aria-label", `QR code for ${urlToUse}. Scan with a mobile device to visit this URL.`);
+      }
+
+      // Announce to screen readers that QR code has been generated
+      const srAnnouncement = document.createElement("div");
+      srAnnouncement.className = "sr-only";
+      srAnnouncement.setAttribute("aria-live", "polite");
+      srAnnouncement.textContent = `QR code generated successfully for ${urlToUse}. You can now download or copy it.`;
+      document.body.appendChild(srAnnouncement);
+
+      // Remove the announcement after it's been read
+      setTimeout(() => {
+        document.body.removeChild(srAnnouncement);
+      }, 3000);
 
       // Show test warning section
       const testWarning = document.querySelector(".test-warning");

@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, defaultClientConditions } from "vite";
 import legacy from "@vitejs/plugin-legacy";
 
 export default defineConfig({
@@ -7,6 +7,13 @@ export default defineConfig({
       targets: ["defaults", "not IE 11"],
     }),
   ],
+  resolve: {
+    conditions: defaultClientConditions,
+  },
+  json: {
+    stringify: 'auto',
+    namedExports: true,
+  },
   build: {
     outDir: "dist",
     assetsDir: "assets",

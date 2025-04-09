@@ -45,6 +45,22 @@ body {
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
   line-height: 1.5;
+  font-size: 16px;
+}
+
+/* Responsive font sizing */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
 }
 
 /* Focus styles for better accessibility */
@@ -53,8 +69,18 @@ body {
   outline-offset: var(--focus-outline-offset);
 }
 
+/* Enhanced focus styles for keyboard navigation */
+:focus-visible {
+  outline: 3px solid var(--button-primary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+  transition: outline-offset 0.1s ease;
+}
+
+/* Skip focus styles for mouse users but keep them for keyboard */
 :focus:not(:focus-visible) {
   outline: none;
+  box-shadow: none;
 }
 
 :focus-visible {
@@ -239,6 +265,22 @@ input:checked + .slider:before {
   box-shadow: var(--shadow-md);
   border: none;
   visibility: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 300px;
+  word-break: break-word;
+  text-align: left;
+}
+
+.toast-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast-message {
+  flex-grow: 1;
 }
 
 .toast.show {
@@ -269,11 +311,64 @@ input:checked + .slider:before {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .input-group {
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  input[type="url"] {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-group {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  input[type="url"] {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 8px 16px;
+    font-size: 13px;
+    min-height: 40px;
+  }
 }
 
 .theme-icon {
   width: 20px;
   height: 20px;
+}
+
+/* Accessibility utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* High contrast mode support */
@@ -325,6 +420,25 @@ input:checked + .slider:before {
   position: relative;
   gap: 25px;
   padding: 20px;
+}
+
+/* Responsive QR container */
+@media (max-width: 768px) {
+  .qr-container {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    gap: 20px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 15px;
+    padding: 10px;
+  }
 }
 
 /* QR Code Animation */
@@ -1207,4 +1321,57 @@ input:checked + .slider:before {
 
 [data-theme="dark"] .history-table tr:hover a {
   color: white; /* Keep white for contrast when row is highlighted */
+}
+
+/* Print styles for QR code */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  .theme-switch,
+  .input-group,
+  .button-group,
+  .test-warning,
+  .best-practices,
+  .toast-container,
+  #history-modal,
+  #history-btn,
+  h1 {
+    display: none !important;
+  }
+
+  .qr-container {
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+  }
+
+  #qrcode {
+    margin: 0 auto;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
+
+  #url-display {
+    margin-top: 20px;
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+  }
 }
