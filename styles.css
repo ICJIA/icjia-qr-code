@@ -281,11 +281,11 @@ input:checked + .slider:before {
   :root {
     --focus-outline: 2px solid CanvasText;
   }
-  
+
   button {
     border: 1px solid CanvasText;
   }
-  
+
   input[type="url"] {
     border: 1px solid CanvasText;
   }
@@ -455,11 +455,11 @@ input:checked + .slider:before {
   :root {
     --focus-outline: 2px solid CanvasText;
   }
-  
+
   button {
     border: 1px solid CanvasText;
   }
-  
+
   input[type="url"] {
     border: 1px solid CanvasText;
   }
@@ -740,6 +740,60 @@ input:checked + .slider:before {
   color: white;
 }
 
+/* Test Warning Section */
+.test-warning {
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  max-width: 600px;
+  animation: pulse 2s infinite;
+}
+
+[data-theme="dark"] .test-warning {
+  background-color: #382c00;
+  border-color: #665200;
+  color: #ffe484;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+  }
+}
+
+.warning-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  text-align: left;
+}
+
+.warning-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.warning-text h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: inherit;
+}
+
+.warning-text p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 /* Best Practices Section */
 .best-practices {
   margin-top: 2rem;
@@ -830,7 +884,7 @@ input:checked + .slider:before {
   .practice-item {
     border: 1px solid CanvasText;
   }
-  
+
   .practice-icon {
     background-color: CanvasText;
     color: Canvas;
@@ -842,7 +896,7 @@ input:checked + .slider:before {
   .practice-item {
     transition: none;
   }
-  
+
   .practice-item:hover {
     transform: none;
   }
@@ -1153,4 +1207,4 @@ input:checked + .slider:before {
 
 [data-theme="dark"] .history-table tr:hover a {
   color: white; /* Keep white for contrast when row is highlighted */
-} 
+}

@@ -79,6 +79,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessages = document.querySelectorAll(".error-message");
     errorMessages.forEach((msg) => msg.remove());
 
+    // Hide test warning when user starts typing a new URL
+    const testWarning = document.querySelector(".test-warning");
+    if (testWarning) {
+      testWarning.classList.add("hidden");
+    }
+
+    // Hide best practices section
+    const bestPractices = document.querySelector(".best-practices");
+    if (bestPractices) {
+      bestPractices.style.display = "none";
+    }
+
     // Re-enable and reset generate button to default state
     generateBtn.disabled = false;
     generateBtn.style.opacity = "1";
@@ -291,6 +303,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Handle Enter key in URL input
   urlInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
+      // Hide test warning when user presses Enter to generate a new QR code
+      const testWarning = document.querySelector(".test-warning");
+      if (testWarning) {
+        testWarning.classList.add("hidden");
+      }
+
       generateBtn.click();
     }
   });
@@ -563,6 +581,12 @@ document.addEventListener("DOMContentLoaded", function () {
       // Show QR code
       qrcodeContainer.classList.remove("hidden");
 
+      // Show test warning section
+      const testWarning = document.querySelector(".test-warning");
+      if (testWarning) {
+        testWarning.classList.remove("hidden");
+      }
+
       // Show best practices section
       const bestPractices = document.querySelector(".best-practices");
       if (bestPractices) {
@@ -574,7 +598,8 @@ document.addEventListener("DOMContentLoaded", function () {
       urlDisplay.href = urlToUse;
       urlDisplay.style.display = "block";
 
-      showToast("QR Code generated successfully!", "success");
+      // Show a toast notification with testing reminder
+      showToast("QR Code generated successfully! Please test it with your mobile device.", "success", 5000);
     } catch (error) {
       console.error("❌ QR Code generation error:", {
         error: error,
@@ -613,6 +638,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const bestPractices = document.querySelector(".best-practices");
     if (bestPractices) {
       bestPractices.style.display = "none";
+    }
+
+    // Hide test warning
+    const testWarning = document.querySelector(".test-warning");
+    if (testWarning) {
+      testWarning.classList.add("hidden");
     }
 
     const encodingConfirmDiv = document.querySelector(".encoding-confirm");
