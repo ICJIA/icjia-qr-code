@@ -124,7 +124,7 @@ The application supports all modern browsers. Legacy browser support is provided
 
 ## Accessibility and Responsiveness
 
-### Accessibility Features
+### Accessibility 
 
 This application is built with accessibility in mind, following WCAG guidelines to ensure usability for all users:
 
@@ -143,7 +143,7 @@ The application is fully responsive and works well on devices of all sizes:
 
 - **Mobile-First Approach**: Optimized layouts for small screens that scale up
 - **Flexible Components**: UI elements that adapt to different viewport widths
-- **Touch-Friendly**: Appropriately sized buttons and inputs for touch devices
+- **Touch-Friendly**: Appropriately sized buttons and inputs for touch Devices
 - **Responsive Typography**: Font sizes that adjust based on screen size
 - **Adaptive Spacing**: Margins and padding that scale with viewport size
 
@@ -287,12 +287,7 @@ yarn test           # Run tests once
 yarn test:watch    # Run tests in watch mode
 ```
 
-The test output provides:
 
-- Detailed pass/fail status for each test case
-- Success rate percentage
-- Visual indicators (✅/❌) for quick status assessment
-- Comprehensive test summaries by category
 
 
 ## URL Validation Improvements
