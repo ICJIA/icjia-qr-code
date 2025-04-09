@@ -122,6 +122,31 @@ yarn preview
 
 The application supports all modern browsers. Legacy browser support is provided through the `@vitejs/plugin-legacy` plugin.
 
+## Accessibility and Responsiveness
+
+### Accessibility Features
+
+This application is built with accessibility in mind, following WCAG guidelines to ensure usability for all users:
+
+- **Keyboard Navigation**: Enhanced focus states with visible indicators for keyboard users
+- **Screen Reader Support**: Proper ARIA attributes, roles, and live regions for dynamic content
+- **Semantic HTML**: Structured content with appropriate heading levels and landmark regions
+- **Notifications**: Toast messages with appropriate ARIA roles and announcement levels
+- **Color Contrast**: Meets WCAG AA standards for text readability
+- **High Contrast Mode**: Support for users with forced-colors preference
+- **Reduced Motion**: Respects user preferences for reduced animations
+- **Print Optimization**: Dedicated print styles for QR code printing
+
+### Responsive Design
+
+The application is fully responsive and works well on devices of all sizes:
+
+- **Mobile-First Approach**: Optimized layouts for small screens that scale up
+- **Flexible Components**: UI elements that adapt to different viewport widths
+- **Touch-Friendly**: Appropriately sized buttons and inputs for touch devices
+- **Responsive Typography**: Font sizes that adjust based on screen size
+- **Adaptive Spacing**: Margins and padding that scale with viewport size
+
 ## Recent Updates
 
 - Added robust URL validation using the validator.js library
@@ -129,11 +154,13 @@ The application supports all modern browsers. Legacy browser support is provided
 - Added multiple download format options (PNG, JPG, WEBP, SVG)
 - Improved error handling and user feedback
 - Added comprehensive console logging
-- Improved accessibility features
+- Enhanced accessibility features with better keyboard navigation and screen reader support
 - Added support for high contrast mode
 - Added support for reduced motion preferences
-- Improved toast notification system
+- Improved toast notification system with better screen reader announcements
 - Added automatic app state reset when entering new URLs
+- Optimized responsive design for mobile devices
+- Added dedicated print styles for QR code printing
 
 ## What is a QR Code?
 
