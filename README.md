@@ -12,7 +12,7 @@ https://qr.icjia.cloud
 - Dark/Light theme support
 - Multiple download formats (PNG, JPG, WEBP, SVG)
 - Copy to clipboard functionality
-- URL validation and encoding
+- Enhanced URL validation and encoding (handles spaces, special characters, and other edge cases)
 - Responsive design
 
 ## Prerequisites
@@ -120,7 +120,8 @@ The application supports all modern browsers. Legacy browser support is provided
 
 ## Recent Updates
 
-- Enhanced URL validation and encoding with user confirmation
+- Added robust URL validation using the validator.js library
+- Enhanced URL validation to handle spaces, special characters, and other edge cases
 - Added multiple download format options (PNG, JPG, WEBP, SVG)
 - Improved error handling and user feedback
 - Added comprehensive console logging
@@ -262,6 +263,21 @@ The test output provides:
 - Visual indicators (✅/❌) for quick status assessment
 - Comprehensive test summaries by category
 
+
+## URL Validation Improvements
+
+The application includes an enhanced URL validation system that handles various edge cases:
+
+- Unescaped spaces in URLs (rejected with helpful error messages and suggested corrections)
+- Properly encoded spaces (%20) in URLs (accepted)
+- Special characters in URLs (properly encoded)
+- Multiple trailing slashes (detected and corrected)
+- Multiple consecutive slashes in paths (normalized)
+- Query parameters with spaces or special characters
+- Hash fragments with spaces or special characters
+- International characters in URLs
+
+See [URL_VALIDATION_IMPROVEMENTS.md](URL_VALIDATION_IMPROVEMENTS.md) for more details.
 
 ## License
 
