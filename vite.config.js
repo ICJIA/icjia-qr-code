@@ -15,7 +15,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["qrcode", "file-saver"],
+          vendor: ["qrcode", "file-saver", "validator"],
         },
       },
     },

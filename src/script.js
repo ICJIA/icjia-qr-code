@@ -287,6 +287,19 @@ document.addEventListener("DOMContentLoaded", function () {
     urlDisplay.textContent = "";
     urlDisplay.href = "#";
     document.querySelector(".qr-container").classList.add("hidden");
+
+    // Hide test warning
+    const testWarning = document.querySelector(".test-warning");
+    if (testWarning) {
+      testWarning.classList.add("hidden");
+    }
+
+    // Hide best practices section
+    const bestPractices = document.querySelector(".best-practices");
+    if (bestPractices) {
+      bestPractices.style.display = "none";
+    }
+
     const encodingConfirmDiv = document.querySelector(".encoding-confirm");
     if (encodingConfirmDiv) {
       encodingConfirmDiv.classList.add("hidden");

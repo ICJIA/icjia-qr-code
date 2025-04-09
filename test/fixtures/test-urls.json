@@ -1,0 +1,41 @@
+{
+  "validURLs": [
+    "https://example.com/path/to/resource",
+    "http://subdomain.example.org/path?query=value",
+    "https://example.net/path/with/trailing/slash/",
+    "http://example.com/path//with/multiple//slashes",
+    "http://example.com/path/with/special/characters/特殊文字",
+    "http://example.com/path#fragment-with-hyphens",
+    "https://example.com:8080/path",
+    "http://user:pass@example.com/path",
+    "http://192.168.1.1/path",
+    "https://example-with-hyphens.com/path",
+    "http://domain-ending-with-hyphen-.org/path",
+    "https://-domain-starting-with-hyphen.com/path",
+    "http://example.com/path?param=value#fragment",
+    "https://example.com/path%20with%20encoded%20spaces",
+    "https://example.com/path?query=value%20with%20encoded%20spaces"
+  ],
+  "invalidURLs": [
+    "not-a-url",
+    "ftp://example.com/path",
+    "http:// example.com",
+    "https://example",
+    "http://example.invalidtld",
+    "http://-domain-starting-with-hyphen.invalidtld",
+    "http://example.com:invalid-port",
+    "http://",
+    "https://",
+    "http://example.",
+    "http://example.com:port",
+    "http:///example.com",
+    "http:/example.com",
+    "://example.com",
+    "http://example..com",
+    "http://example.com/files/this is my file.pdf",
+    "https://example with spaces.com/path",
+    "http://subdomain.example.org/path with spaces/file.html",
+    "https://example.com/path/file name with spaces.jpg",
+    "http://example.com/path/to/my documents/report.pdf"
+  ]
+}

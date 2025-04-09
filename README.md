@@ -78,6 +78,8 @@ Babel presets and plugins:
    yarn install
    ```
 
+> **Important**: This project uses Yarn as the package manager. Please do not use npm to install dependencies or run scripts, as this may generate a package-lock.json file and cause conflicts.
+
 ## Development
 
 To start the development server:
@@ -113,6 +115,8 @@ yarn preview
 - `yarn preview` - Preview production build
 - `yarn lint` - Run ESLint
 - `yarn format` - Format code with Prettier
+- `yarn test` - Run tests
+- `yarn test:watch` - Run tests in watch mode
 
 ## Browser Support
 
