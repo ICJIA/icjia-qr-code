@@ -9,6 +9,8 @@ export default defineConfig({
   ],
   resolve: {
     conditions: defaultClientConditions,
+    // Add validator to the list of modules to be pre-bundled
+    dedupe: ['validator']
   },
   json: {
     stringify: 'auto',
