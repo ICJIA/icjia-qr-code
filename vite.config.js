@@ -21,11 +21,19 @@ export default defineConfig({
     assetsDir: "assets",
     sourcemap: true,
     minify: "terser",
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ["qrcode", "file-saver", "validator"],
         },
+        // Ensure proper module resolution in production
+        format: 'es',
+        // Ensure validator is properly bundled
+        preserveModules: false,
       },
     },
   },

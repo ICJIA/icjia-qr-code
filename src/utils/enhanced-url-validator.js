@@ -1,3 +1,4 @@
+// Import validator with a dynamic import to ensure it's properly bundled
 import validator from 'validator';
 
 /**
