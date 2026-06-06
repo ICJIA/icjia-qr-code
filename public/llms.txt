@@ -1,0 +1,16 @@
+# ICJIA QR Code Generator
+
+> A free, accessible web tool from the Illinois Criminal Justice Information Authority (ICJIA) that turns any URL into a downloadable QR code, with an optional ICJIA badge in the center. QR codes use error-correction level H so the badge stays scannable. Generated codes can be downloaded as PNG, JPG, WEBP, or SVG, or copied to the clipboard. The tool runs entirely in the browser; QR code history is stored locally and never sent to a server.
+
+## Pages
+
+- [QR Code Generator](https://qr.icjia.cloud/): The tool itself — enter a URL, optionally add the ICJIA badge, and download the QR code. Supports a `?url=` deep link that pre-fills and generates a code.
+- [What is a QR code?](https://qr.icjia.cloud/what-is-a-qr-code/): Plain-language explanation of QR codes and what this tool does.
+- [How QR codes work](https://qr.icjia.cloud/how-qr-codes-work/): Data analysis, error correction, structure generation, and module placement.
+- [Scanning a QR code](https://qr.icjia.cloud/scanning-guide/): How to scan a QR code on iPhone, Android, and other devices.
+- [QR code best practices](https://qr.icjia.cloud/best-practices/): Testing, minimum size, contrast, and quiet-zone guidance.
+
+## About
+
+- Publisher: Illinois Criminal Justice Information Authority (ICJIA) — https://icjia.illinois.gov
+- Source code: https://github.com/ICJIA/icjia-qr-code

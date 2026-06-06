@@ -8,12 +8,74 @@ import Footer from "../components/Footer.astro";
 
 const {
   title = "QR Code Generator",
-  description = "Generate accessible, downloadable QR codes for any URL, with optional ICJIA branding. A free tool from the Illinois Criminal Justice Information Authority.",
+  description = "Generate free, accessible QR codes for any URL, with an optional ICJIA badge. A tool from the Illinois Criminal Justice Information Authority.",
   image = "/og-image.png",
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
+const isHome = Astro.url.pathname === "/";
+
+// Build-time dates for freshness signals (static site).
+const published = "2026-06-06";
+const modified = new Date().toISOString().slice(0, 10);
+
+const orgId = new URL("#org", Astro.site).href;
+const siteId = new URL("#website", Astro.site).href;
+const ORG_NAME = "Illinois Criminal Justice Information Authority";
+
+const graph = [
+  {
+    "@type": "Organization",
+    "@id": orgId,
+    name: ORG_NAME,
+    alternateName: "ICJIA",
+    url: "https://icjia.illinois.gov",
+  },
+  {
+    "@type": "WebSite",
+    "@id": siteId,
+    url: Astro.site.href,
+    name: "ICJIA QR Code Generator",
+    inLanguage: "en",
+    publisher: { "@id": orgId },
+  },
+  {
+    "@type": "WebPage",
+    "@id": canonical + "#webpage",
+    url: canonical,
+    name: title,
+    description,
+    inLanguage: "en",
+    isPartOf: { "@id": siteId },
+    primaryImageOfPage: ogImage,
+    datePublished: published,
+    dateModified: modified,
+    author: { "@id": orgId },
+    publisher: { "@id": orgId },
+  },
+];
+
+if (isHome) {
+  graph.push({
+    "@type": "WebApplication",
+    name: "ICJIA QR Code Generator",
+    url: canonical,
+    description,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any",
+    browserRequirements: "Requires JavaScript",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    inLanguage: "en",
+    author: { "@id": orgId },
+    publisher: { "@id": orgId },
+    datePublished: published,
+    dateModified: modified,
+  });
+}
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 ---
 
 <!doctype html>
@@ -44,7 +106,10 @@ const ogImage = new URL(image, Astro.site).href;
         imageAlt: "ICJIA QR Code Generator",
       }}
       extend={{
-        meta: [{ name: "theme-color", content: "#23356a" }],
+        meta: [
+          { name: "theme-color", content: "#23356a" },
+          { name: "author", content: `${ORG_NAME} (ICJIA)` },
+        ],
         link: [
           { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
           { rel: "icon", type: "image/png", href: "/favicon.png" },
@@ -52,6 +117,8 @@ const ogImage = new URL(image, Astro.site).href;
         ],
       }}
     />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
     <!-- Set theme before paint to avoid a flash of the wrong color scheme -->
     <script is:inline>
