@@ -6,9 +6,10 @@
   NODE_VERSION = "22"
   YARN_VERSION = "1.22.22"
 
-# Security headers for all routes.
-# Note: 'unsafe-inline' on script-src is required by the pre-paint theme script
-# in BaseLayout; it can be tightened to a hash later if desired.
+# Security headers for all routes (Netlify also serves HSTS).
+# 'unsafe-inline' on script-src/style-src is required by the no-flash inline
+# theme script, the per-page inline JSON-LD, and inline style attributes on a
+# static host (no per-request nonce); mitigated by the absence of any XSS sink.
 [[headers]]
   for = "/*"
   [headers.values]
@@ -16,4 +17,5 @@
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; object-src 'none'"
