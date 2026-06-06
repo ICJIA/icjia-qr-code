@@ -1,0 +1,37 @@
+---
+const levels = [
+  { key: "L", pct: 7 },
+  { key: "M", pct: 15 },
+  { key: "Q", pct: 25 },
+  { key: "H", pct: 30, active: true },
+];
+const MAX = 30;
+---
+
+<section class="info" aria-labelledby="ec-heading">
+  <div class="container info__narrow">
+    <p class="info__eyebrow">Why a logo doesn't break it</p>
+    <h2 id="ec-heading" class="info__title">Built-in error correction</h2>
+    <p class="info__lead">
+      QR codes can recover data from damaged or covered areas. This tool uses
+      the highest level, <strong>H</strong>, so a centered badge still scans
+      cleanly.
+    </p>
+    <ul class="ec-bars">
+      {
+        levels.map((l) => (
+          <li class:list={["ec", { "ec--active": l.active }]}>
+            <span class="ec__key">{l.key}</span>
+            <span class="ec__track">
+              <span
+                class="ec__fill"
+                style={`width:${Math.round((l.pct / MAX) * 100)}%`}
+              />
+            </span>
+            <span class="ec__pct">{l.pct}%</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

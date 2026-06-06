@@ -22,8 +22,8 @@ describe("qr-renderer", () => {
       expect(SIZE).toBe(320);
     });
 
-    it("returns an instance exposing the qr-code-styling API", () => {
-      const qr = createQr({ data: "https://icjia.illinois.gov" });
+    it("returns an instance exposing the qr-code-styling API", async () => {
+      const qr = await createQr({ data: "https://icjia.illinois.gov" });
       expect(typeof qr.append).toBe("function");
       expect(typeof qr.update).toBe("function");
       expect(typeof qr.getRawData).toBe("function");

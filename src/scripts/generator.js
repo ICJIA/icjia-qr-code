@@ -90,13 +90,18 @@ ready(() => {
     return result.url || result.suggestedUrl || result.originalUrl;
   }
 
-  function render(result) {
+  async function render(result) {
     currentResult = result;
     const data = dataFrom(result);
 
     qrcodeDiv.replaceChildren();
-    qr = createQr({ data, image: getLogoImage(logoToggle) });
-    qr.append(qrcodeDiv);
+    try {
+      qr = await createQr({ data, image: getLogoImage(logoToggle) });
+      qr.append(qrcodeDiv);
+    } catch {
+      showToast("Failed to generate QR Code", "error");
+      return;
+    }
     qrcodeDiv.setAttribute(
       "aria-label",
       `QR code for ${data}. Scan with a mobile device to open this URL.`,
@@ -169,12 +174,12 @@ ready(() => {
     if (e.key === "Enter") generateBtn.click();
   });
 
-  logoToggle?.addEventListener("change", () => {
+  logoToggle?.addEventListener("change", async () => {
     persistLogoPref(logoToggle);
     if (currentResult) {
       const data = dataFrom(currentResult);
       qrcodeDiv.replaceChildren();
-      qr = createQr({ data, image: getLogoImage(logoToggle) });
+      qr = await createQr({ data, image: getLogoImage(logoToggle) });
       qr.append(qrcodeDiv);
     }
   });

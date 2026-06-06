@@ -1,4 +1,12 @@
-import QRCodeStyling from "qr-code-styling";
+// qr-code-styling is loaded on first use via dynamic import, so it stays out of
+// the initial island bundle (smaller first load, no render-blocking from it).
+let qrLibPromise;
+function loadQrLib() {
+  if (!qrLibPromise) {
+    qrLibPromise = import("qr-code-styling").then((m) => m.default);
+  }
+  return qrLibPromise;
+}
 
 // QR codes render dark-on-light regardless of page theme, for scannability.
 export const SIZE = 320;
@@ -17,12 +25,13 @@ export function fileExtension(format) {
 }
 
 /**
- * Build a configured QRCodeStyling instance.
- * Level H error correction tolerates the optional center logo.
+ * Build a configured QRCodeStyling instance (loads the library on first call).
+ * Level H error correction tolerates the optional center badge.
  * @param {{ data: string, image?: string }} opts
- * @returns {QRCodeStyling}
+ * @returns {Promise<import("qr-code-styling").default>}
  */
-export function createQr({ data, image }) {
+export async function createQr({ data, image }) {
+  const QRCodeStyling = await loadQrLib();
   return new QRCodeStyling({
     type: "canvas",
     width: SIZE,
@@ -46,7 +55,7 @@ export function createQr({ data, image }) {
 
 /**
  * Get the QR code as a Blob in the requested format.
- * @param {QRCodeStyling} qr
+ * @param {import("qr-code-styling").default} qr
  * @param {string} format
  * @returns {Promise<Blob|null>}
  */

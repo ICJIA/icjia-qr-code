@@ -14,7 +14,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/archivo": "^5.2.8",
     "@fontsource-variable/public-sans": "^5.2.7",
     "astro": "^6.4.4",
     "astro-seo": "^1.1.0",

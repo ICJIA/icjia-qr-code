@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import QrGenerator from "../components/QrGenerator.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import Stats from "../components/Stats.astro";
+import ErrorCorrection from "../components/ErrorCorrection.astro";
 ---
 
 <BaseLayout title="QR Code Generator | ICJIA">
@@ -16,4 +19,8 @@ import QrGenerator from "../components/QrGenerator.astro";
 
     <QrGenerator />
   </div>
+
+  <HowItWorks />
+  <Stats />
+  <ErrorCorrection />
 </BaseLayout>

@@ -1,0 +1,43 @@
+---
+const steps = [
+  {
+    n: "01",
+    icon: "🔗",
+    title: "Paste a URL",
+    text: "Enter any http or https web address.",
+  },
+  {
+    n: "02",
+    icon: "🏛️",
+    title: "Add the ICJIA badge",
+    text: "An optional center badge, on by default.",
+  },
+  {
+    n: "03",
+    icon: "⬇️",
+    title: "Download or copy",
+    text: "Save as PNG, JPG, WEBP, or SVG — or copy it.",
+  },
+];
+---
+
+<section class="info" aria-labelledby="how-heading">
+  <div class="container">
+    <p class="info__eyebrow">How it works</p>
+    <h2 id="how-heading" class="info__title">Make a QR code in three steps</h2>
+    <ol class="steps">
+      {
+        steps.map((s) => (
+          <li class="step">
+            <span class="step__num">{s.n}</span>
+            <span class="step__icon" aria-hidden="true">
+              {s.icon}
+            </span>
+            <h3 class="step__title">{s.title}</h3>
+            <p class="step__text">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
