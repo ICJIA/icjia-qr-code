@@ -1,18 +1,19 @@
 [build]
-command = "yarn build"
-publish = "dist"
+  command = "yarn build"
+  publish = "dist"
 
 [build.environment]
-NODE_VERSION = "18"
-YARN_VERSION = "1.22.22"
+  NODE_VERSION = "20"
+  YARN_VERSION = "1.22.22"
 
-# Ensure proper headers for JavaScript modules
+# Security headers for all routes.
+# Note: 'unsafe-inline' on script-src is required by the pre-paint theme script
+# in BaseLayout; it can be tightened to a hash later if desired.
 [[headers]]
-for = "/*.js"
-[headers.values]
-Content-Type = "text/javascript"
-
-[[headers]]
-for = "/assets/*.js"
-[headers.values]
-Content-Type = "text/javascript"
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; base-uri 'self'; frame-ancestors 'none'; object-src 'none'"

@@ -30,6 +30,9 @@ coverage/
 dist-ssr
 *.local
 
+# Astro
+.astro/
+
 # Logs
 logs
 *.log
