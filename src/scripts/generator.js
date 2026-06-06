@@ -1,7 +1,6 @@
 import { sanitizeAndValidateURL } from "./url-validator.js";
 import { createQr, getBlob, fileExtension } from "./qr-renderer.js";
 import { showToast } from "./toast.js";
-import { initThemeToggle } from "./theme.js";
 import { restoreLogoPref, persistLogoPref, getLogoImage } from "./logo.js";
 import { addToHistory, initHistoryUI } from "./history.js";
 import { showEncodingWarning, showDoubleSlashWarning } from "./dialogs.js";
@@ -24,7 +23,6 @@ ready(() => {
   const encodingConfirm = document.querySelector(".encoding-confirm");
   const testWarning = document.querySelector(".test-warning");
   const bestPractices = document.querySelector(".best-practices");
-  const themeSwitch = document.querySelector("#theme-switch");
   const logoToggle = document.querySelector("#logo-toggle");
 
   if (!urlInput || !generateBtn || !qrcodeDiv || !qrContainer) return;
@@ -47,7 +45,6 @@ ready(() => {
     generateBtn.disabled = true;
   }
 
-  initThemeToggle(themeSwitch);
   restoreLogoPref(logoToggle);
 
   initHistoryUI({

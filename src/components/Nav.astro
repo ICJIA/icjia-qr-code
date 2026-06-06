@@ -1,0 +1,25 @@
+---
+const links = [
+  { href: "/", label: "Generator" },
+  { href: "/what-is-a-qr-code/", label: "What is a QR code?" },
+  { href: "/how-qr-codes-work/", label: "How it works" },
+  { href: "/scanning-guide/", label: "Scanning" },
+  { href: "/best-practices/", label: "Best practices" },
+];
+const norm = (p) => (p.endsWith("/") ? p : p + "/");
+const here = norm(Astro.url.pathname);
+---
+
+<nav class="site-nav" aria-label="Primary">
+  <ul>
+    {
+      links.map((l) => (
+        <li>
+          <a href={l.href} aria-current={here === norm(l.href) ? "page" : undefined}>
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

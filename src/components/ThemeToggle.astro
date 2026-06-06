@@ -1,0 +1,16 @@
+---
+// Theme toggle. Self-wires on every page (the generator island is not present
+// on content pages), so dark/light works site-wide.
+---
+
+<div class="theme-switch">
+  <label class="switch" aria-label="Toggle dark mode">
+    <input type="checkbox" id="theme-switch" />
+    <span class="slider"></span>
+  </label>
+</div>
+
+<script>
+  import { initThemeToggle } from "../scripts/theme.js";
+  initThemeToggle(document.getElementById("theme-switch"));
+</script>
