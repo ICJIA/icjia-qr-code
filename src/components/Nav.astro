@@ -15,7 +15,10 @@ const here = norm(Astro.url.pathname);
     {
       links.map((l) => (
         <li>
-          <a href={l.href} aria-current={here === norm(l.href) ? "page" : undefined}>
+          <a
+            href={l.href}
+            aria-current={here === norm(l.href) ? "page" : undefined}
+          >
             {l.label}
           </a>
         </li>

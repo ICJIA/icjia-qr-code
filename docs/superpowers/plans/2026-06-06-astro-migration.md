@@ -17,6 +17,7 @@
 ## File Structure
 
 **Created:**
+
 - `astro.config.mjs`, `tsconfig.json`, `vitest.config.js`, `.github/workflows/ci.yml`
 - `src/layouts/BaseLayout.astro`, `src/layouts/ContentLayout.astro`
 - `src/components/Header.astro`, `Footer.astro`, `Nav.astro`, `ThemeToggle.astro`, `QrGenerator.astro`
@@ -124,7 +125,11 @@ export default defineConfig({
 ```js
 import { defineConfig } from "vitest/config";
 export default defineConfig({
-  test: { environment: "happy-dom", include: ["test/**/*.test.js"], globals: true },
+  test: {
+    environment: "happy-dom",
+    include: ["test/**/*.test.js"],
+    globals: true,
+  },
 });
 ```
 
@@ -154,9 +159,18 @@ const EXT = { png: "png", jpg: "jpeg", jpeg: "jpeg", webp: "webp", svg: "svg" };
 
 export function createQr({ data, image }) {
   return new QRCodeStyling({
-    width: SIZE, height: SIZE, type: "canvas", data, image,
+    width: SIZE,
+    height: SIZE,
+    type: "canvas",
+    data,
+    image,
     qrOptions: { errorCorrectionLevel: "H" },
-    imageOptions: { crossOrigin: "anonymous", margin: 6, imageSize: 0.2, hideBackgroundDots: true },
+    imageOptions: {
+      crossOrigin: "anonymous",
+      margin: 6,
+      imageSize: 0.2,
+      hideBackgroundDots: true,
+    },
     dotsOptions: { color: "#000000", type: "square" },
     backgroundOptions: { color: "#ffffff" },
   });

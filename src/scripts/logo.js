@@ -18,7 +18,10 @@ export function restoreLogoPref(checkboxEl) {
 
 export function persistLogoPref(checkboxEl) {
   try {
-    localStorage.setItem(STORAGE_KEY, String(Boolean(checkboxEl && checkboxEl.checked)));
+    localStorage.setItem(
+      STORAGE_KEY,
+      String(Boolean(checkboxEl && checkboxEl.checked)),
+    );
   } catch {
     /* ignore */
   }

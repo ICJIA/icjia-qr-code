@@ -23,37 +23,69 @@
   </label>
 
   <!-- URL change confirmation (populated by the client script when needed) -->
-  <div class="encoding-confirm hidden" role="dialog" aria-label="URL change confirmation"></div>
+  <div
+    class="encoding-confirm hidden"
+    role="dialog"
+    aria-label="URL change confirmation"
+  >
+  </div>
 
   <div class="qr-container hidden">
     <div id="qrcode" role="img" aria-label="Generated QR code"></div>
-    <a id="url-display" target="_blank" rel="noopener noreferrer" aria-label="Generated URL"></a>
+    <a
+      id="url-display"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Generated URL"></a>
 
     <div class="button-group">
       <div class="action-buttons">
-        <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy QR code to clipboard">
+        <button
+          id="copy-btn"
+          class="copy-btn"
+          type="button"
+          aria-label="Copy QR code to clipboard"
+        >
           Copy QR Code
         </button>
         <div class="download-controls">
           <label class="sr-only" for="format-select">Download format</label>
-          <select id="format-select" class="format-select" aria-label="Select download format">
+          <select
+            id="format-select"
+            class="format-select"
+            aria-label="Select download format"
+          >
             <option value="png">PNG</option>
             <option value="jpg">JPG</option>
             <option value="webp">WEBP</option>
             <option value="svg">SVG</option>
           </select>
-          <button id="download-btn" class="download-btn" type="button" aria-label="Download QR code">
+          <button
+            id="download-btn"
+            class="download-btn"
+            type="button"
+            aria-label="Download QR code"
+          >
             Download
           </button>
         </div>
-        <button id="reset-btn" class="reset-btn" type="button" aria-label="Reset form">
+        <button
+          id="reset-btn"
+          class="reset-btn"
+          type="button"
+          aria-label="Reset form"
+        >
           Reset
         </button>
       </div>
     </div>
   </div>
 
-  <div class="test-warning hidden" role="alert" aria-label="Important testing warning">
+  <div
+    class="test-warning hidden"
+    role="alert"
+    aria-label="Important testing warning"
+  >
     <div class="warning-content">
       <span class="warning-icon" aria-hidden="true">⚠️</span>
       <div class="warning-text">
@@ -66,7 +98,11 @@
     </div>
   </div>
 
-  <div class="best-practices hidden" role="region" aria-label="QR code best practices">
+  <div
+    class="best-practices hidden"
+    role="region"
+    aria-label="QR code best practices"
+  >
     <h2>QR Code Best Practices</h2>
     <div class="practices-list">
       <div class="practice-item">
@@ -120,10 +156,17 @@
           </p>
         </div>
         <div class="modal-header-right">
-          <button id="delete-history-btn" class="delete-history-btn" type="button" aria-label="Delete QR code history">
+          <button
+            id="delete-history-btn"
+            class="delete-history-btn"
+            type="button"
+            aria-label="Delete QR code history"
+          >
             Delete History
           </button>
-          <button class="close-modal" type="button" aria-label="Close history">&times;</button>
+          <button class="close-modal" type="button" aria-label="Close history"
+            >&times;</button
+          >
         </div>
       </div>
       <div class="modal-body">
@@ -144,7 +187,12 @@
     </div>
   </div>
 
-  <button id="history-btn" class="history-btn" type="button" aria-label="View QR code history">
+  <button
+    id="history-btn"
+    class="history-btn"
+    type="button"
+    aria-label="View QR code history"
+  >
     My QR Codes
   </button>
 </section>

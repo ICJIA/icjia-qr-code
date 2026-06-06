@@ -1,5 +1,5 @@
 // Import validator with a dynamic import to ensure it's properly bundled
-import validator from 'validator';
+import validator from "validator";
 
 /**
  * Enhanced URL validator using the validator.js library
@@ -36,14 +36,15 @@ export function validateAndSanitizeURL(input) {
     let needsEncoding = false;
 
     // Check if the URL contains unescaped spaces
-    if (processedUrl.includes(' ')) {
+    if (processedUrl.includes(" ")) {
       // URLs with unescaped spaces should be considered invalid
       // This is a strict validation requirement
       return {
         isValid: false,
-        error: "URLs with unescaped spaces are invalid. Please encode spaces as %20.",
+        error:
+          "URLs with unescaped spaces are invalid. Please encode spaces as %20.",
         originalUrl: processedUrl,
-        suggestedUrl: processedUrl.replace(/ /g, '%20')
+        suggestedUrl: processedUrl.replace(/ /g, "%20"),
       };
     }
 
@@ -59,15 +60,16 @@ export function validateAndSanitizeURL(input) {
     } catch (e) {
       return {
         isValid: false,
-        error: "Invalid URL format. Please enter a valid URL starting with http:// or https://",
-        details: e.message
+        error:
+          "Invalid URL format. Please enter a valid URL starting with http:// or https://",
+        details: e.message,
       };
     }
 
     // Basic URL validation with validator.js
     // Use more lenient options to allow spaces and special characters
     const urlOptions = {
-      protocols: ['http', 'https'],
+      protocols: ["http", "https"],
       require_protocol: true,
       require_valid_protocol: true,
       require_host: true,
@@ -75,7 +77,7 @@ export function validateAndSanitizeURL(input) {
       allow_underscores: true,
       allow_trailing_dot: true,
       allow_fragments: true,
-      allow_query_components: true
+      allow_query_components: true,
     };
 
     // If the URL contains spaces or special characters, we'll handle it ourselves
@@ -83,7 +85,8 @@ export function validateAndSanitizeURL(input) {
     if (!validator.isURL(processedUrl, urlOptions) && !needsEncoding) {
       return {
         isValid: false,
-        error: "Invalid URL format. Please enter a valid URL starting with http:// or https://",
+        error:
+          "Invalid URL format. Please enter a valid URL starting with http:// or https://",
       };
     }
 
@@ -122,10 +125,12 @@ export function validateAndSanitizeURL(input) {
     if (hasMultipleTrailingSlashes) {
       // Handle the case where the URL has query parameters or hash fragments
       let correctedUrl;
-      if (trimmedUrl.includes('?') || trimmedUrl.includes('#')) {
+      if (trimmedUrl.includes("?") || trimmedUrl.includes("#")) {
         // For URLs with query parameters or hash, we need to be more careful
         // Split the URL into parts
-        const urlParts = trimmedUrl.match(/^(https?:\/\/[^\/?#]+)([^?#]*)(\?[^#]*)?(#.*)?$/);
+        const urlParts = trimmedUrl.match(
+          /^(https?:\/\/[^\/?#]+)([^?#]*)(\?[^#]*)?(#.*)?$/,
+        );
         if (urlParts) {
           const [, baseUrl, path, query, hash] = urlParts;
 
@@ -153,7 +158,9 @@ export function validateAndSanitizeURL(input) {
       const correctedUrl = trimmedUrl.replace(/([^:]\/)\/+/g, "$1");
       normalizedUrl = new URL(correctedUrl).toString();
       hasWarnings = true;
-      warnings.push("Multiple consecutive slashes in path detected and corrected");
+      warnings.push(
+        "Multiple consecutive slashes in path detected and corrected",
+      );
     }
 
     // Check if URL needs encoding (if we haven't already determined this)
@@ -197,7 +204,9 @@ export function validateAndSanitizeURL(input) {
       // Encode pathname parts
       const pathParts = urlObject.pathname.split("/");
       encodedUrl.pathname = pathParts
-        .map((part) => (part ? encodeURIComponent(decodeURIComponent(part)) : ""))
+        .map((part) =>
+          part ? encodeURIComponent(decodeURIComponent(part)) : "",
+        )
         .join("/");
 
       // Handle query parameters properly
@@ -211,20 +220,26 @@ export function validateAndSanitizeURL(input) {
           const decodedValue = decodeURIComponent(value);
 
           // Encode special characters
-          encodedParams.push(`${encodeURIComponent(decodedKey)}=${encodeURIComponent(decodedValue)}`);
+          encodedParams.push(
+            `${encodeURIComponent(decodedKey)}=${encodeURIComponent(decodedValue)}`,
+          );
         }
 
-        encodedUrl.search = encodedParams.length > 0 ? `?${encodedParams.join("&")}` : "";
+        encodedUrl.search =
+          encodedParams.length > 0 ? `?${encodedParams.join("&")}` : "";
       }
 
       // Encode hash
       if (urlObject.hash) {
-        encodedUrl.hash = "#" + encodeURIComponent(decodeURIComponent(urlObject.hash.slice(1)));
+        encodedUrl.hash =
+          "#" + encodeURIComponent(decodeURIComponent(urlObject.hash.slice(1)));
       }
 
       normalizedUrl = encodedUrl.toString();
       hasWarnings = true;
-      warnings.push("URL contained unencoded characters and has been properly encoded");
+      warnings.push(
+        "URL contained unencoded characters and has been properly encoded",
+      );
     }
 
     // Return the validation result
@@ -239,7 +254,7 @@ export function validateAndSanitizeURL(input) {
     return {
       isValid: false,
       error: "Invalid URL format. Please check the URL",
-      details: error.message
+      details: error.message,
     };
   }
 }

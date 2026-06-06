@@ -10,16 +10,20 @@ const SYMBOLS = {
 
 function describeChanges(originalUrl) {
   const changes = [];
-  if (originalUrl.includes(" ")) changes.push('Spaces were converted to "%20".');
+  if (originalUrl.includes(" "))
+    changes.push('Spaces were converted to "%20".');
 
   const nonAscii = originalUrl.match(/[^\x00-\x7F]/g);
   if (nonAscii) {
     [...new Set(nonAscii)].forEach((ch) => {
-      changes.push(`Special character "${ch}" was converted to "${encodeURIComponent(ch)}".`);
+      changes.push(
+        `Special character "${ch}" was converted to "${encodeURIComponent(ch)}".`,
+      );
     });
   }
   Object.entries(SYMBOLS).forEach(([sym, enc]) => {
-    if (originalUrl.includes(sym)) changes.push(`Symbol "${sym}" was converted to "${enc}".`);
+    if (originalUrl.includes(sym))
+      changes.push(`Symbol "${sym}" was converted to "${enc}".`);
   });
   if (changes.length === 0) {
     changes.push("Your URL was normalized for QR code compatibility.");
@@ -83,7 +87,11 @@ function actionRow(approveLabel, cancelLabel, onApprove, onCancel) {
   return wrap;
 }
 
-export function showEncodingWarning(container, result, { onApprove, onCancel }) {
+export function showEncodingWarning(
+  container,
+  result,
+  { onApprove, onCancel },
+) {
   container.replaceChildren();
   container.classList.remove("hidden");
 
@@ -111,12 +119,21 @@ export function showEncodingWarning(container, result, { onApprove, onCancel }) 
     warning,
     list,
     urlComparison(result.originalUrl, result.url, true),
-    actionRow("Yes, generate with modified URL", "No, cancel", onApprove, onCancel)
+    actionRow(
+      "Yes, generate with modified URL",
+      "No, cancel",
+      onApprove,
+      onCancel,
+    ),
   );
   container.appendChild(details);
 }
 
-export function showDoubleSlashWarning(container, result, { onApprove, onCancel }) {
+export function showDoubleSlashWarning(
+  container,
+  result,
+  { onApprove, onCancel },
+) {
   container.replaceChildren();
   container.classList.remove("hidden");
 
@@ -135,7 +152,7 @@ export function showDoubleSlashWarning(container, result, { onApprove, onCancel 
     h3,
     warning,
     urlComparison(result.originalUrl, result.suggestedUrl, false),
-    actionRow("Use corrected URL", "Cancel", onApprove, onCancel)
+    actionRow("Use corrected URL", "Cancel", onApprove, onCancel),
   );
   container.appendChild(details);
 }

@@ -62,7 +62,7 @@ const ogImage = new URL(image, Astro.site).href;
           var dark = saved ? saved === "dark" : true;
           document.documentElement.setAttribute(
             "data-theme",
-            dark ? "dark" : "light"
+            dark ? "dark" : "light",
           );
         } catch (e) {
           document.documentElement.setAttribute("data-theme", "light");

@@ -19,19 +19,19 @@ Out of scope this round: Preact/framework rewrite, Playwright E2E (noted as a fu
 
 ## 2. Decisions (locked)
 
-| Decision | Choice |
-| --- | --- |
-| App shell | **Astro** static site (SSG), Netlify |
-| Generator implementation | **Vanilla JS ES modules** hydrated as one Astro client island (no UI framework) |
-| QR library | **qr-code-styling** (replaces CDN `qrcodejs` + `file-saver` + the unused npm `qrcode`) |
-| URL validation | Keep `validator` + existing validator logic (relocated) |
-| Logo asset | `ICJIAblue [Converted].eps` → **high-res transparent PNG** via Ghostscript (no SVG conversion) |
-| Logo behavior | Toggle "Add ICJIA logo", **default ON** |
-| Content | **Full content site** — 4 Markdown pages + generator home |
-| Tests | **Migrate Jest → Vitest** (Vite-native; removes Babel + `NODE_OPTIONS` hack) |
-| CI | GitHub Actions: install → lint → test → `astro build` |
-| UI | **Modern refresh** (see §8) |
-| Node | Bump to **Node 20** (Astro 5 requires ≥18.20.8) on Netlify + `.nvmrc` |
+| Decision                 | Choice                                                                                         |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| App shell                | **Astro** static site (SSG), Netlify                                                           |
+| Generator implementation | **Vanilla JS ES modules** hydrated as one Astro client island (no UI framework)                |
+| QR library               | **qr-code-styling** (replaces CDN `qrcodejs` + `file-saver` + the unused npm `qrcode`)         |
+| URL validation           | Keep `validator` + existing validator logic (relocated)                                        |
+| Logo asset               | `ICJIAblue [Converted].eps` → **high-res transparent PNG** via Ghostscript (no SVG conversion) |
+| Logo behavior            | Toggle "Add ICJIA logo", **default ON**                                                        |
+| Content                  | **Full content site** — 4 Markdown pages + generator home                                      |
+| Tests                    | **Migrate Jest → Vitest** (Vite-native; removes Babel + `NODE_OPTIONS` hack)                   |
+| CI                       | GitHub Actions: install → lint → test → `astro build`                                          |
+| UI                       | **Modern refresh** (see §8)                                                                    |
+| Node                     | Bump to **Node 20** (Astro 5 requires ≥18.20.8) on Netlify + `.nvmrc`                          |
 
 ## 3. Canonical Astro Directory Structure
 

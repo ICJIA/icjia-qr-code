@@ -124,7 +124,7 @@ The application supports all modern browsers. Legacy browser support is provided
 
 ## Accessibility and Responsiveness
 
-### Accessibility 
+### Accessibility
 
 This application is built with accessibility in mind, following WCAG guidelines to ensure usability for all users:
 
@@ -286,9 +286,6 @@ The test suite covers:
 yarn test           # Run tests once
 yarn test:watch    # Run tests in watch mode
 ```
-
-
-
 
 ## URL Validation Improvements
 

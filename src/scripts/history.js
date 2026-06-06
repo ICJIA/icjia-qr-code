@@ -176,7 +176,14 @@ function showDeleteConfirmation(onConfirmed) {
  *           closeBtn: HTMLElement, deleteBtn: HTMLElement,
  *           onPick: (item: {originalUrl: string, encodedUrl: string}) => void }} els
  */
-export function initHistoryUI({ openBtn, modal, tbody, closeBtn, deleteBtn, onPick }) {
+export function initHistoryUI({
+  openBtn,
+  modal,
+  tbody,
+  closeBtn,
+  deleteBtn,
+  onPick,
+}) {
   const open = () => {
     renderRows(tbody, (item) => {
       hide();

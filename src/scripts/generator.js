@@ -41,7 +41,10 @@ ready(() => {
     .filter(([, ok]) => !ok)
     .map(([name]) => name);
   if (missing.length) {
-    showToast(`Your browser is missing required features: ${missing.join(", ")}`, "error");
+    showToast(
+      `Your browser is missing required features: ${missing.join(", ")}`,
+      "error",
+    );
     generateBtn.disabled = true;
   }
 
@@ -56,7 +59,11 @@ ready(() => {
     onPick: (item) => {
       resetView();
       urlInput.value = item.encodedUrl;
-      render({ isValid: true, url: item.encodedUrl, originalUrl: item.originalUrl });
+      render({
+        isValid: true,
+        url: item.encodedUrl,
+        originalUrl: item.originalUrl,
+      });
     },
   });
 
@@ -92,7 +99,7 @@ ready(() => {
     qr.append(qrcodeDiv);
     qrcodeDiv.setAttribute(
       "aria-label",
-      `QR code for ${data}. Scan with a mobile device to open this URL.`
+      `QR code for ${data}. Scan with a mobile device to open this URL.`,
     );
 
     qrContainer.classList.remove("hidden");
@@ -106,7 +113,11 @@ ready(() => {
     }
 
     addToHistory({ originalUrl: result.originalUrl || data, url: data });
-    showToast("QR Code generated. Please test it with a mobile device.", "success", 5000);
+    showToast(
+      "QR Code generated. Please test it with a mobile device.",
+      "success",
+      5000,
+    );
   }
 
   generateBtn.addEventListener("click", () => {
@@ -123,7 +134,11 @@ ready(() => {
     if (result.warning === "Double trailing slash detected") {
       showDoubleSlashWarning(encodingConfirm, result, {
         onApprove: () =>
-          render({ isValid: true, url: result.suggestedUrl, originalUrl: result.originalUrl }),
+          render({
+            isValid: true,
+            url: result.suggestedUrl,
+            originalUrl: result.originalUrl,
+          }),
         onCancel: () => {
           resetView();
           showToast("QR code generation cancelled", "info");
@@ -145,7 +160,8 @@ ready(() => {
   });
 
   urlInput.addEventListener("input", () => {
-    const dialogOpen = encodingConfirm && !encodingConfirm.classList.contains("hidden");
+    const dialogOpen =
+      encodingConfirm && !encodingConfirm.classList.contains("hidden");
     if (!qrContainer.classList.contains("hidden") || dialogOpen) resetView();
   });
 
@@ -171,7 +187,9 @@ ready(() => {
     try {
       copyBtn.classList.add("loading");
       const blob = await getBlob(qr, "png");
-      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob }),
+      ]);
       showToast("QR Code copied to clipboard!", "success");
     } catch {
       showToast("Failed to copy QR Code", "error");
@@ -222,7 +240,7 @@ ready(() => {
   window.addEventListener("unhandledrejection", (e) => {
     showToast(
       `An unexpected error occurred: ${e.reason?.message || "Unknown error"}`,
-      "error"
+      "error",
     );
   });
 });

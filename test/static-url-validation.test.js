@@ -61,9 +61,13 @@ describe("Static URL Validation Test Suite", () => {
 
     afterAll(() => {
       log("\n=== URL Validation Summary ===");
-      log(`Total URL validations: ${testResults.total} (${validURLs.length} valid + ${invalidURLs.length} invalid)`);
+      log(
+        `Total URL validations: ${testResults.total} (${validURLs.length} valid + ${invalidURLs.length} invalid)`,
+      );
       log(`Passed: ${testResults.passed} | Failed: ${testResults.failed}`);
-      log(`Success Rate: ${((testResults.passed / testResults.total) * 100).toFixed(2)}%`);
+      log(
+        `Success Rate: ${((testResults.passed / testResults.total) * 100).toFixed(2)}%`,
+      );
     });
   });
 
@@ -75,14 +79,22 @@ describe("Static URL Validation Test Suite", () => {
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
       expect(result.url || result.suggestedUrl).toBe("https://example.com/");
-      log("✅", "URL encoding test passed:", url, "→", result.url || result.suggestedUrl);
+      log(
+        "✅",
+        "URL encoding test passed:",
+        url,
+        "→",
+        result.url || result.suggestedUrl,
+      );
     });
 
     test("URL encoding test - URL with spaces", () => {
       const url = "https://example.com/path with spaces/";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(false);
-      expect(result.suggestedUrl).toBe("https://example.com/path%20with%20spaces/");
+      expect(result.suggestedUrl).toBe(
+        "https://example.com/path%20with%20spaces/",
+      );
       log("✅", "URL encoding test passed:", url, "→", result.suggestedUrl);
     });
 
@@ -90,16 +102,32 @@ describe("Static URL Validation Test Suite", () => {
       const url = "https://example.com/path/with/特殊文字";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
-      expect(result.url || result.suggestedUrl).toContain("https://example.com/path/with/");
-      log("✅", "URL encoding test passed:", url, "→", result.url || result.suggestedUrl);
+      expect(result.url || result.suggestedUrl).toContain(
+        "https://example.com/path/with/",
+      );
+      log(
+        "✅",
+        "URL encoding test passed:",
+        url,
+        "→",
+        result.url || result.suggestedUrl,
+      );
     });
 
     test("URL encoding test - Multiple consecutive slashes", () => {
       const url = "https://example.com/path//with///multiple////slashes";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
-      expect(result.url || result.suggestedUrl).toBe("https://example.com/path/with/multiple/slashes");
-      log("✅", "URL encoding test passed:", url, "→", result.url || result.suggestedUrl);
+      expect(result.url || result.suggestedUrl).toBe(
+        "https://example.com/path/with/multiple/slashes",
+      );
+      log(
+        "✅",
+        "URL encoding test passed:",
+        url,
+        "→",
+        result.url || result.suggestedUrl,
+      );
     });
 
     afterAll(() => {
@@ -117,7 +145,13 @@ describe("Static URL Validation Test Suite", () => {
       expect(result.isValid).toBe(true);
       expect(result.warning).toBe("Double trailing slash detected");
       expect(result.suggestedUrl).toBe("https://example.com/");
-      log("✅", "Double trailing slash test passed:", url, "→", result.suggestedUrl);
+      log(
+        "✅",
+        "Double trailing slash test passed:",
+        url,
+        "→",
+        result.suggestedUrl,
+      );
     });
 
     test("should handle double trailing slash with path", () => {
@@ -126,7 +160,13 @@ describe("Static URL Validation Test Suite", () => {
       expect(result.isValid).toBe(true);
       expect(result.warning).toBe("Double trailing slash detected");
       expect(result.suggestedUrl).toBe("https://example.com/path/");
-      log("✅", "Path with double trailing slash test passed:", url, "→", result.suggestedUrl);
+      log(
+        "✅",
+        "Path with double trailing slash test passed:",
+        url,
+        "→",
+        result.suggestedUrl,
+      );
     });
 
     test("should handle double trailing slash with query parameters", () => {
@@ -135,7 +175,13 @@ describe("Static URL Validation Test Suite", () => {
       expect(result.isValid).toBe(true);
       expect(result.warning).toBe("Double trailing slash detected");
       expect(result.suggestedUrl).toBe("https://example.com/?param=value/");
-      log("✅", "Query parameters with double trailing slash test passed:", url, "→", result.suggestedUrl);
+      log(
+        "✅",
+        "Query parameters with double trailing slash test passed:",
+        url,
+        "→",
+        result.suggestedUrl,
+      );
     });
 
     afterAll(() => {

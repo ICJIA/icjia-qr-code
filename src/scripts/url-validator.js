@@ -1,4 +1,4 @@
-import { validateAndSanitizeURL } from './enhanced-url-validator.js';
+import { validateAndSanitizeURL } from "./enhanced-url-validator.js";
 
 /**
  * Sanitizes and validates a URL
@@ -37,7 +37,7 @@ export function sanitizeAndValidateURL(input) {
       return {
         isValid: true,
         url: input,
-        originalUrl: input
+        originalUrl: input,
       };
     }
   }
@@ -47,7 +47,7 @@ export function sanitizeAndValidateURL(input) {
     return {
       isValid: true,
       url: input,
-      originalUrl: input
+      originalUrl: input,
     };
   }
 
@@ -56,7 +56,7 @@ export function sanitizeAndValidateURL(input) {
     return {
       isValid: true,
       url: input,
-      originalUrl: input
+      originalUrl: input,
     };
   }
 
@@ -66,10 +66,14 @@ export function sanitizeAndValidateURL(input) {
   // to maintain backward compatibility with the original API
   if (result.isValid && result.hasWarnings && result.warnings) {
     // If there's a warning about trailing slashes, format it like the original
-    if (result.warnings.includes("Multiple trailing slashes detected and corrected")) {
+    if (
+      result.warnings.includes(
+        "Multiple trailing slashes detected and corrected",
+      )
+    ) {
       // For URLs with query parameters, we need to handle them specially
       // to maintain compatibility with the original tests
-      if (result.originalUrl.includes('?')) {
+      if (result.originalUrl.includes("?")) {
         // Extract the query parameter part
         const queryMatch = result.originalUrl.match(/\?([^#]*)/);
         if (queryMatch && queryMatch[1]) {

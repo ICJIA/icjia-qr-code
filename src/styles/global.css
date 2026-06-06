@@ -36,8 +36,9 @@
   --warning: #b45309;
 
   /* Typography */
-  --font-sans: "Public Sans Variable", system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+  --font-sans:
+    "Public Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
   --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
   --fs-300: 0.875rem;
   --fs-400: 1rem;
@@ -61,7 +62,8 @@
   --radius-sm: 8px;
   --radius: 14px;
   --radius-lg: 20px;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-sm:
+    0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
   --shadow: 0 4px 12px rgba(15, 23, 42, 0.08), 0 2px 4px rgba(15, 23, 42, 0.06);
   --shadow-lg: 0 20px 40px -12px rgba(15, 23, 42, 0.25);
   --container: 64rem;
@@ -109,7 +111,8 @@ body {
   font-size: var(--fs-400);
   line-height: var(--lh);
   color: var(--text);
-  background: radial-gradient(
+  background:
+    radial-gradient(
       1100px 560px at 50% -8%,
       color-mix(in srgb, var(--accent) 9%, transparent),
       transparent 68%
@@ -290,7 +293,9 @@ h4 {
   color: var(--text);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
 }
 #url-input::placeholder {
   color: var(--text-muted);
@@ -306,8 +311,11 @@ button {
   border: none;
   border-radius: var(--radius);
   font-weight: 600;
-  transition: background var(--transition), transform var(--transition),
-    box-shadow var(--transition), opacity var(--transition);
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition),
+    opacity var(--transition);
 }
 button:disabled {
   opacity: 0.55;
@@ -557,7 +565,9 @@ button.loading {
   padding: var(--space-3) var(--space-4);
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity var(--transition), transform var(--transition);
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
 }
 .toast.show {
   opacity: 1;
@@ -806,7 +816,9 @@ button.loading {
   color: var(--text-muted);
   font-size: var(--fs-300);
   font-weight: 500;
-  transition: background var(--transition), color var(--transition);
+  transition:
+    background var(--transition),
+    color var(--transition);
 }
 .site-nav a:hover {
   background: var(--surface-2);
