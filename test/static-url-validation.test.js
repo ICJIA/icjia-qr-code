@@ -1,9 +1,4 @@
-/**
- * @jest-environment node
- */
-
-import { sanitizeAndValidateURL } from "../src/utils/url-validator.js";
-import QRCode from "qrcode";
+import { sanitizeAndValidateURL } from "../src/scripts/url-validator.js";
 import testUrls from "./fixtures/test-urls.json";
 
 // Custom logger to output test results in a single line
@@ -12,22 +7,7 @@ const log = (...args) => process.stdout.write(args.join(" ") + "\n");
 // Using static test URLs from the JSON file
 const { validURLs, invalidURLs } = testUrls;
 
-/**
- * Extracts the URL from a QR code
- * @param {string} qrCodeData - The QR code data string
- * @returns {string} The URL contained in the QR code
- */
-async function getUrlFromQRCode(qrCodeData) {
-  try {
-    const url = await QRCode.toDataURL(qrCodeData);
-    return url;
-  } catch (error) {
-    console.error("Failed to decode QR code:", error);
-    return null;
-  }
-}
-
-describe("Static URL Validation and QR Code Generation Test Suite", () => {
+describe("Static URL Validation Test Suite", () => {
   const testResults = {
     valid: [],
     invalid: [],
@@ -87,10 +67,10 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
     });
   });
 
-  describe("QR Code Content Tests (5 test cases)", () => {
-    log("\n=== Testing QR Code Content Generation ===");
+  describe("URL Encoding Tests (4 test cases)", () => {
+    log("\n=== Testing URL Encoding ===");
 
-    test("URL encoding test - Double trailing slash", async () => {
+    test("URL encoding test - Double trailing slash", () => {
       const url = "https://example.com//";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
@@ -98,7 +78,7 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
       log("✅", "URL encoding test passed:", url, "→", result.url || result.suggestedUrl);
     });
 
-    test("URL encoding test - URL with spaces", async () => {
+    test("URL encoding test - URL with spaces", () => {
       const url = "https://example.com/path with spaces/";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(false);
@@ -106,7 +86,7 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
       log("✅", "URL encoding test passed:", url, "→", result.suggestedUrl);
     });
 
-    test("URL encoding test - URL with special characters", async () => {
+    test("URL encoding test - URL with special characters", () => {
       const url = "https://example.com/path/with/特殊文字";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
@@ -114,7 +94,7 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
       log("✅", "URL encoding test passed:", url, "→", result.url || result.suggestedUrl);
     });
 
-    test("URL encoding test - Multiple consecutive slashes", async () => {
+    test("URL encoding test - Multiple consecutive slashes", () => {
       const url = "https://example.com/path//with///multiple////slashes";
       const result = sanitizeAndValidateURL(url);
       expect(result.isValid).toBe(true);
@@ -124,7 +104,7 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
 
     afterAll(() => {
       log("\n=== URL Encoding Tests Summary ===");
-      log("All 5 URL encoding test cases completed");
+      log("All 4 URL encoding test cases completed");
     });
   });
 
@@ -162,11 +142,5 @@ describe("Static URL Validation and QR Code Generation Test Suite", () => {
       log("\n=== Double Trailing Slash Tests Summary ===");
       log("All 3 double trailing slash test cases passed");
     });
-  });
-
-  afterAll(() => {
-    log("\n=== Final Test Suite Summary ===");
-    log(`Total Test Cases: ${testResults.total + 8} (${testResults.total} URL validations + 5 QR code content + 3 double trailing slash tests)`);
-    log(`Overall Success Rate: ${((testResults.passed / testResults.total) * 100).toFixed(2)}%`);
   });
 });

@@ -1,8 +1,4 @@
-/**
- * @jest-environment node
- */
-
-import { validateAndSanitizeURL } from "../src/utils/enhanced-url-validator.js";
+import { validateAndSanitizeURL } from "../src/scripts/enhanced-url-validator.js";
 
 describe("Enhanced URL Validation Tests", () => {
   describe("Basic URL validation", () => {
