@@ -1,7 +1,6 @@
 # ICJIA QR Code Generator
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4746f560-f403-43e6-951b-1a64ad1f13fa/deploy-status)](https://app.netlify.com/sites/icjia-qr/deploys)
-[![CI](https://github.com/ICJIA/icjia-qr-code/actions/workflows/ci.yml/badge.svg)](https://github.com/ICJIA/icjia-qr-code/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)](#testing)
 [![Lighthouse](https://img.shields.io/badge/Lighthouse-100%2F100-brightgreen?logo=lighthouse&logoColor=white)](https://qr.icjia.cloud)
 [![Built with Astro](https://img.shields.io/badge/Astro-6-ff5d01?logo=astro&logoColor=white)](https://astro.build)
