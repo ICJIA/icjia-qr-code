@@ -1,10 +1,25 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import QrGenerator from "../components/QrGenerator.astro";
 ---
 
 <BaseLayout title="QR Code Generator | ICJIA">
+  <div class="theme-switch">
+    <label class="switch" aria-label="Toggle dark mode">
+      <input type="checkbox" id="theme-switch" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
   <main class="container">
-    <h1>QR Code Generator</h1>
-    <p>Scaffold in progress.</p>
+    <header class="page-head">
+      <h1>QR Code Generator</h1>
+      <p class="lead">
+        Create accessible, downloadable QR codes for any URL &mdash; with
+        optional ICJIA branding in the center.
+      </p>
+    </header>
+
+    <QrGenerator />
   </main>
 </BaseLayout>
