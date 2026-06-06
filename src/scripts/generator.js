@@ -214,6 +214,14 @@ ready(() => {
     showToast("Form reset", "info");
   });
 
+  // Deep link: ?url=... pre-fills the input and generates immediately,
+  // so a shared link reproduces the same QR code.
+  const deepUrl = new URLSearchParams(location.search).get("url");
+  if (deepUrl) {
+    urlInput.value = deepUrl;
+    generateBtn.click();
+  }
+
   window.addEventListener("unhandledrejection", (e) => {
     showToast(
       `An unexpected error occurred: ${e.reason?.message || "Unknown error"}`,

@@ -1,7 +1,8 @@
-// The ICJIA logo asset is wired in Phase 4. Until then `logoUrl` is undefined,
-// so getLogoImage() returns undefined and the QR renders without a logo.
-// Phase 4 replaces the next line with: import logoUrl from "../assets/icjia-logo.png";
-let logoUrl;
+import logoImage from "../assets/icjia-logo.png";
+
+// Astro resolves a src/ image import to an ImageMetadata object ({ src, width, height });
+// qr-code-styling needs the plain URL string.
+const logoUrl = logoImage?.src ?? logoImage;
 
 const STORAGE_KEY = "logoEnabled";
 
