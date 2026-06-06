@@ -47,7 +47,7 @@ test/              Vitest suites (URL validation, qr-renderer)
 
 ## Prerequisites
 
-- Node.js >= 20
+- Node.js >= 22.12 (Astro 6 requirement)
 - Yarn 1.x (this project uses Yarn — do not use npm)
 
 ## Getting started
