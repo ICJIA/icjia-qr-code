@@ -34,7 +34,7 @@ export function createQr({ data, image }) {
     imageOptions: {
       crossOrigin: "anonymous",
       hideBackgroundDots: true,
-      imageSize: 0.15,
+      imageSize: 0.2,
       margin: 4,
     },
     dotsOptions: { type: "square", color: "#000000" },

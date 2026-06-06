@@ -1,4 +1,4 @@
-import logoImage from "../assets/icjia-logo.png";
+import logoImage from "../assets/icjia-badge.png";
 
 // Astro resolves a src/ image import to an ImageMetadata object ({ src, width, height });
 // qr-code-styling needs the plain URL string.

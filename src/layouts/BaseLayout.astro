@@ -1,5 +1,8 @@
 ---
+import "@fontsource-variable/public-sans";
+import "@fontsource-variable/fraunces";
 import "../styles/global.css";
+import { SEO } from "astro-seo";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
@@ -18,35 +21,45 @@ const ogImage = new URL(image, Astro.site).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:site_name" content="ICJIA QR Code Generator" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonical}
+      openGraph={{
+        basic: { title, type: "website", image: ogImage, url: canonical },
+        optional: { siteName: "ICJIA QR Code Generator", description },
+        image: {
+          alt: "ICJIA QR Code Generator",
+          width: 1200,
+          height: 630,
+          type: "image/png",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title,
+        description,
+        image: ogImage,
+        imageAlt: "ICJIA QR Code Generator",
+      }}
+      extend={{
+        meta: [{ name: "theme-color", content: "#23356a" }],
+        link: [
+          { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+          { rel: "icon", type: "image/png", href: "/favicon.png" },
+          { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        ],
+      }}
+    />
 
     <!-- Set theme before paint to avoid a flash of the wrong color scheme -->
     <script is:inline>
       (function () {
         try {
+          // Default to dark mode unless the visitor has explicitly chosen light.
           var saved = localStorage.getItem("theme");
-          var dark = saved
-            ? saved === "dark"
-            : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var dark = saved ? saved === "dark" : true;
           document.documentElement.setAttribute(
             "data-theme",
             dark ? "dark" : "light"
