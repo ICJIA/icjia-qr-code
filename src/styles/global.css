@@ -1069,3 +1069,76 @@ button.loading {
 .ec--active .ec__fill {
   background: var(--accent);
 }
+
+/* Stats band — subtle dot-grid texture */
+.info--band {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--accent) 16%, transparent) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 22px 22px;
+}
+
+/* Anatomy diagram */
+.anatomy {
+  margin-top: var(--space-6);
+  display: grid;
+  grid-template-columns: minmax(0, 16rem) 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+.anatomy__svg {
+  width: 100%;
+  max-width: 16rem;
+  margin-inline: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-sm);
+}
+.legend {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.legend__item {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  font-size: var(--fs-300);
+  color: var(--text-muted);
+}
+.legend__item strong {
+  color: var(--text);
+  font-weight: 700;
+}
+.legend__swatch {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 5px;
+  margin-top: 0.1rem;
+}
+.lg--finder .legend__swatch {
+  background: var(--accent);
+}
+.lg--data .legend__swatch {
+  background: color-mix(in srgb, var(--text-muted) 55%, transparent);
+}
+.lg--badge .legend__swatch {
+  background: #23356a;
+  border: 1px solid color-mix(in srgb, #ffffff 30%, transparent);
+}
+.lg--quiet .legend__swatch {
+  background: transparent;
+  border: 2px dashed color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+@media (max-width: 560px) {
+  .anatomy {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}

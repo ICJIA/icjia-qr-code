@@ -1,0 +1,135 @@
+---
+// Stylized "anatomy of a QR code" diagram. Data modules are placed on a fixed
+// 11x11 grid with a deterministic pattern (no randomness, so the build is stable),
+// skipping the finder-pattern corners and the center badge.
+const CELLS = [24, 42, 60, 78, 96, 114, 132, 150, 168, 186, 204];
+const inFinder = (x, y) =>
+  (x <= 60 && y <= 60) || (x >= 168 && y <= 60) || (x <= 60 && y >= 168);
+const inBadge = (x, y) => x >= 90 && x <= 150 && y >= 90 && y <= 150;
+
+const mods = [];
+CELLS.forEach((y, i) =>
+  CELLS.forEach((x, j) => {
+    if (
+      !inFinder(x, y) &&
+      !inBadge(x, y) &&
+      (i * 3 + j * 5 + i * j) % 3 === 0
+    ) {
+      mods.push([x, y]);
+    }
+  }),
+);
+
+const finders = [
+  [24, 24],
+  [172, 24],
+  [24, 172],
+];
+
+const legend = [
+  {
+    cls: "lg--finder",
+    label: "Finder patterns",
+    desc: "let a scanner orient the code",
+  },
+  { cls: "lg--data", label: "Data modules", desc: "encode your URL" },
+  {
+    cls: "lg--badge",
+    label: "ICJIA badge",
+    desc: "safe at error-correction level H",
+  },
+  {
+    cls: "lg--quiet",
+    label: "Quiet zone",
+    desc: "the margin that keeps it readable",
+  },
+];
+---
+
+<section class="info" aria-labelledby="anatomy-heading">
+  <div class="container info__narrow">
+    <p class="info__eyebrow">Anatomy</p>
+    <h2 id="anatomy-heading" class="info__title">What's inside a QR code</h2>
+
+    <div class="anatomy">
+      <svg
+        class="anatomy__svg"
+        viewBox="0 0 240 240"
+        role="img"
+        aria-label="Diagram of a QR code's parts: finder patterns in the corners, data modules, the ICJIA badge in the center, and the surrounding quiet zone."
+      >
+        <rect
+          x="3"
+          y="3"
+          width="234"
+          height="234"
+          rx="16"
+          fill="none"
+          stroke="var(--accent)"
+          stroke-opacity="0.55"
+          stroke-dasharray="7 7"></rect>
+        <g fill="var(--text-muted)" opacity="0.55">
+          {
+            mods.map(([x, y]) => (
+              <rect x={x} y={y} width="14" height="14" rx="2" />
+            ))
+          }
+        </g>
+        {
+          finders.map(([fx, fy]) => (
+            <g>
+              <rect
+                x={fx}
+                y={fy}
+                width="44"
+                height="44"
+                rx="7"
+                fill="var(--accent)"
+              />
+              <rect
+                x={fx + 8}
+                y={fy + 8}
+                width="28"
+                height="28"
+                rx="4"
+                fill="var(--surface)"
+              />
+              <rect
+                x={fx + 15}
+                y={fy + 15}
+                width="14"
+                height="14"
+                rx="2"
+                fill="var(--accent)"
+              />
+            </g>
+          ))
+        }
+        <rect x="94" y="94" width="52" height="52" rx="11" fill="#23356a"
+        ></rect>
+        <text
+          x="120"
+          y="125"
+          text-anchor="middle"
+          font-family="Archivo Variable, system-ui, sans-serif"
+          font-size="15"
+          font-weight="800"
+          fill="#ffffff">ICJIA</text
+        >
+      </svg>
+
+      <ul class="legend">
+        {
+          legend.map((l) => (
+            <li class:list={["legend__item", l.cls]}>
+              <span class="legend__swatch" aria-hidden="true" />
+              <span>
+                <strong>{l.label}</strong> — {l.desc}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
