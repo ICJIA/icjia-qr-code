@@ -17,8 +17,14 @@ const ogImage = new URL(image, Astro.site).href;
 const isHome = Astro.url.pathname === "/";
 
 // Build-time dates for freshness signals (static site).
+const buildDate = new Date();
 const published = "2026-06-06";
-const modified = new Date().toISOString().slice(0, 10);
+const modified = buildDate.toISOString().slice(0, 10);
+// Full ISO 8601 timestamps for the Open Graph article:* meta tags below. Some AI
+// and SEO crawlers read these flat meta tags but do not traverse dates nested in
+// the JSON-LD @graph, so we expose freshness both ways.
+const publishedTime = `${published}T00:00:00+00:00`;
+const modifiedTime = buildDate.toISOString();
 
 const orgId = new URL("#org", Astro.site).href;
 const siteId = new URL("#website", Astro.site).href;
@@ -91,6 +97,7 @@ const jsonLd = { "@context": "https://schema.org", "@graph": graph };
       openGraph={{
         basic: { title, type: "website", image: ogImage, url: canonical },
         optional: { siteName: "ICJIA QR Code Generator", description },
+        article: { publishedTime, modifiedTime },
         image: {
           alt: "ICJIA QR Code Generator",
           width: 1200,
