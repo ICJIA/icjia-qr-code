@@ -1157,10 +1157,10 @@ astro-seo@^1.1.0:
   dependencies:
     "@astrojs/check" "^0.9.0"
 
-astro@^6.4.4:
-  version "6.4.4"
-  resolved "https://registry.yarnpkg.com/astro/-/astro-6.4.4.tgz#2078aaf981be8ef72e7df3705094884c2755e1dd"
-  integrity sha512-hVe8tq3lqt/Dr0UyB//yUmQSlHMTU8scTiF/vQddQVahLE4TTaSdH5H0nb7OvRcwo0UmlAO8DWYar4jNaS7H+A==
+astro@^6.4.6:
+  version "6.4.6"
+  resolved "https://registry.yarnpkg.com/astro/-/astro-6.4.6.tgz#913d5d6cc18a294bf03567772d35137d5d851f6c"
+  integrity sha512-48OBTBKR9ctbf+DQxpOuxGl8ebfn59zTuNQMBzptmG/Mi/H8IdfMSbJgGuX1I/4U6g9yazG1p4BHlf4+2hWU4Q==
   dependencies:
     "@astrojs/compiler" "^4.0.0"
     "@astrojs/internal-helpers" "0.10.0"
@@ -2927,15 +2927,10 @@ sax@^1.5.0:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.6.0.tgz#da59637629307b97e7c4cb28e080a7bc38560d5b"
   integrity sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==
 
-semver@^7.3.8, semver@^7.6.2, semver@^7.7.3, semver@^7.7.4:
+semver@^7.3.8, semver@^7.5.3, semver@^7.6.2, semver@^7.7.3, semver@^7.7.4:
   version "7.8.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.8.2.tgz#194bd65723a28cf82542d2bf176b91c26b343be1"
   integrity sha512-c8jsqUZm3omBOI66G90z1Dyw5z622G8oLG+omfsHBJf3CWQTlOcwOjvOG6wtiNfW6anKm/eA39LMwMtMez2TiQ==
-
-semver@^7.5.3:
-  version "7.7.1"
-  resolved "https://registry.npmjs.org/semver/-/semver-7.7.1.tgz"
-  integrity sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==
 
 sharp@^0.34.0:
   version "0.34.5"
